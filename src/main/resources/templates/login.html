@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+    <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+    <link th:href="@{/main.css}" rel="stylesheet" />
+</head>
+<body class="c-bg-secondary d-flex align-items-center justify-content-center" style="height: 100vh;">
+    <div class="container d-flex align-items-center justify-content-center w-50 p-5 bg-white border rounded-3">
+        <form th:action="@{/login}" method="post" class="p-4 w-50">
+            <div th:if="${ error }" class="alert alert-success alert-dismissible fade show w-50 d-flex" role="alert">
+              <strong>Success!</strong> <div th:text='${" " + error}'></div>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <h1 class="mb-3 c-text-primary">Login</h1>
+            <div class="form-group my-2">
+                <label for="username">username</label>
+                <input name="username" id="username" placeholder="enter your username" type="text" class="form-control">
+            </div>
+            <div class="form-group my-2">
+                <label for="password">password</label>
+                <input type="password" id="password" placeholder="enter your password" name="password" class="form-control">
+            </div>
+            <button class="btn c-btn-primary rounded-4 px-5 mt-3 w-100" type="submit"> <i class="fa-solid fa-arrow-right-to-bracket me-2"></i>login</button>
+        </form>
+        <img th:src="@{/images/img.png}" width="300px">
+    </div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Doctors</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link th:href="@{/main.css}" rel="stylesheet" />
+</head>
+<body>
+    <div layout:fragment="content">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-decoration-none text-dark" href="/">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page"><a class="text-decoration-none text-dark" href="/doctor/">Doctors</a></li>
+            </ol>
+        </nav>
+        <div class="d-flex align-items-center justify-content-between bg-white p-3 rounded-3 border">
+            <form action="/doctor/" method="get" class="d-flex align-items-center justify-content-center">
+                <input th:value="${search}" type="text" name="search" id="" class="form-control" placeholder="Enter the name or speciality">
+                <button type="submit" class="btn  rounded-3 c-btn-primary text-white ms-2 d-flex align-items-center"><i class="fa-solid fa-magnifying-glass me-2"></i>search</button>
+            </form>
+            <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="btn c-outline-primary c-text-primary rounded-3 text-capitalize" data-bs-toggle="modal" data-bs-target="#addDoctorModal">add doctor<i class="fa-solid fa-plus ms-1"></i></a>
+        </div>
+        <div  th:if="${isAdmin}" class="modal fade" id="addDoctorModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Doctor</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="/doctor/" enctype="multipart/form-data" method="post" class="p-4">
+                            <div class="form-group">
+                                <label for="image">Doctor Image</label>
+                                <input id="image" name="image" class="form-control" placeholder="please chose doctor image" type="file"  >
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">First name</label>
+                                <input id="lastName" name="firstName" class="form-control" type="text" placeholder="enter the first name of doctor" >
+                            </div>
+                            <div class="form-group my-2">
+                                <label for="firstName">Last name</label>
+                                <input class="form-control" name="lastName" type="text" placeholder="enter the last name of doctor" id="firstName">
+                            </div>
+                            <div class="form-group  my-2">
+                                <label for="phone">Phone number</label>
+                                <input class="form-control" type="tel" name="phone" id="phone" placeholder="enter the phone number of doctor">
+                            </div>
+                            <div class="form-group my-2">
+                                <label for="email">Email</label>
+                                <input class="form-control" type="email" name="email" id="email" placeholder="enter the email of doctor">
+                            </div>
+                            <div class="my-2 d-flex">
+                                <div class="form-group me-1">
+                                    <label for="yearOfExperience">Years of experience</label>
+                                    <input class="form-control" type="number" name="yearsOfExperience" id="yearOfExperience" placeholder="enter the years of experience">
+                                </div>
+                                <div class="form-group ms-1">
+                                    <label for="birthDate">Birth Date</label>
+                                    <input class="form-control" type="date" name="birthDate" id="birthDate" placeholder="enter the birth date">
+                                </div>
+                            </div>
+                            <div class="form-group my-2">
+                                <label for="joinDate">Join Date</label>
+                                <input class="form-control" type="date" name="joinDate" id="joinDate" placeholder="enter the Join Date">
+                            </div>
+                            <div class="form-group my-2">
+                                <label for="speciality">Speciality</label>
+                                <select id="speciality" name="speciality" class="form-select">
+                                    <option value="Family Medicine">Family Medicine</option>
+                                    <option value="Internal Medicine">Internal Medicine</option>
+                                    <option value="Pediatrics">Pediatrics</option>
+                                </select>
+                            </div>
+                            <div class="d-flex align-items-center justify-content-end mt-5">
+                                <button class="btn btn-outline-danger px-2 me-2" type="reset">
+                                    <i class="fa-solid fa-floppy-disk" ></i> Cancel
+                                </button>
+                                <button class="btn btn-danger px-2" type="submit">
+                                    <i class="fa-solid fa-floppy-disk"></i> Save
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row my-2">
+            <div class="col-sm-12 text-center mt-5" th:if="${doctors.isEmpty()}">no doctors available</div>
+            <div class="col-sm-12 col-md-6 my-1" th:each="doctor : ${doctors}" th:if="${doctor.isPublished()}">
+                <div class="container border d-flex p-2 w-100 rounded-3 bg-white">
+                    <img style="object-fit: cover; object-position: 50% 50% ;" th:src="@{${'/doctor/image/' + doctor.getId()}}" width="200px" height="200px" />
+                    <div class="p-3 w-100">
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <h2 class="text-capitalize me-2" th:text='${doctor.getFirstName() + " " + doctor.getLastName()}'></h2>
+                            <div th:text="${doctor.getSpeciality()}" class="badge bg-primary ms-2"></div>
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-phone me-2"></i>
+                            <span th:text='${doctor.getPhone()}' ></span>
+                        </div>
+                        <div>
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            <span th:text='${ doctor.getEmail()}'></span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-end w-100 mt-3">
+                            <a sec:authorize="hasAuthority('ROLE_PATIENT')" class="btn c-btn-primary me-1" th:href="@{/doctor/{id}/book-appointment(id=${doctor.getId()})}"><i class="fa-solid fa-calendar-check me-2"></i>Book appointment</a>
+                            <form sec:authorize="hasAuthority('ROLE_ADMIN')" class="me-1 ms-1" th:action="@{/doctor/delete/{id}(id=${doctor.getId()})}" method="post">
+                                <button class="btn c-outline-primary"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                            <a sec:authorize="hasAuthority('ROLE_ADMIN')" class="ms-1 btn btn-outline-success" th:href="@{/doctor/{id}(id=${doctor.getId()})}"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

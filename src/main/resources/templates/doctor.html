@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Patient</title>
+
+  <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const buttons = document.querySelectorAll('.editStatusBtn');
+      console.log(buttons)
+      buttons.forEach(button => {
+        button.addEventListener('click', function () {
+          const appointmentId = this.getAttribute('data-edit-status-btn');
+          const appointmentIdInput = document.getElementById("appointment-id")
+
+          appointmentIdInput.value = appointmentId
+        });
+      });
+    });
+  </script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+  <div layout:fragment="content">
+      <div class="row">
+        <div class="col-sm-3 py-3 bg-white rounded-3 border" style="height: min-content">
+          <div class="container d-flex align-items-center justify-content-start flex-column">
+            <img style="object-fit: cover; object-position: 50% 50% ;" th:src="@{${'/doctor/image/' + doctor.getId()}}" width="200px" height="200px" class="rounded-circle"/>
+            <div class="d-flex align-items-start justify-content-center flex-column mt-2" >
+              <h2 class="text-capitalize" th:text='${ doctor.getFirstName()+ " " + doctor.getLastName()}'></h2>
+              <p class="badge bg-danger" th:text="${doctor.getSpeciality()}"></p>
+              <div class="d-flex align-items-center justify-content-start my-1">
+                <i class="fa-solid fa-envelope me-2"></i>
+                <div th:text="${doctor.getEmail()}"></div>
+              </div>
+              <div class="d-flex align-items-center justify-content-start my-1">
+                <i class="fa-solid fa-phone me-2"></i>
+                <div th:text="${doctor.getPhone()}"></div>
+              </div>
+              <div class="d-flex align-items-center justify-content-start my-1">
+                <i class="fa-solid fa-cake-candles me-2"></i>
+                <div th:text="${doctor.getBirthDate()}"></div>
+              </div>
+              <div class="d-flex align-items-center justify-content-start my-1">
+                Join At :
+                <div th:text="${doctor.getBirthDate()}"></div>
+              </div>
+              
+              <button class="btn btn-outline-dark mt-3" data-bs-toggle="modal" data-bs-target="#editProfileImageModal">
+                <i class="fa-solid fa-gear me-2"></i>Edit profile image
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-8 container">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <button class="nav-link text-dark active" data-bs-toggle="tab" data-bs-target="#tab1">
+                Personal Details
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-link text-dark" data-bs-toggle="tab" data-bs-target="#tab2">
+                Appointment Details
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content bg-white border">
+            <div class="tab-pane fade show p-4 active " id="tab1">
+              <form method="post" th:action="@{/doctor/edit-doctor}" class="">
+                <div class="text-capitalize my-2 d-flex align-items-center justify-content-between">
+                  <input name="id" th:value="${doctor.getId()}" hidden="true">
+                  <div class="w-50 me-1">
+                    <label for="firstName">FirstName :</label>
+                    <input id="firstName" name="firstName" th:value="${doctor.getFirstName()}"  class="form-control w-100">
+                  </div>
+                  <div class="w-50 ms-1">
+                    <label for="lastName">LastName :</label>
+                    <input id="lastName" name="lastName" th:value="${doctor.getLastName()}" class="form-control w-100">
+                  </div>
+                </div>
+                <div class="w-100">
+                  <label for="email">Email :</label>
+                  <input type="email" id="email" name="email" th:value="${doctor.getEmail()}" class="form-control w-100">
+                </div>
+                <div class="text-capitalize my-2">
+                  <label for="nbPhone">Phone Number :</label>
+                  <input type="tel" id="nbPhone" name="phone" th:value="${doctor.getPhone()}" class="form-control w-100">
+                </div>
+                <div class="my-2 d-flex">
+                  <div class="form-group me-1 w-100">
+                    <label for="yearOfExperience">Years of experience</label>
+                    <input th:value="${doctor.getYearsOfExperience()}" class="form-control" type="number" name="yearsOfExperience" id="yearOfExperience" placeholder="enter the years of experience">
+                  </div>
+                  <div class="form-group ms-1 w-100">
+                    <label for="birthDate">Birth Date</label>
+                    <input th:value="${doctor.getBirthDate()}" class="form-control" type="date" name="birthDate" id="birthDate" placeholder="enter the birth date">
+                  </div>
+                </div>
+                <div class="form-group my-2">
+                  <label for="joinDate">Join Date</label>
+                  <input class="form-control" th:value="${doctor.getJoinDate()}" type="date" name="joinDate" id="joinDate" placeholder="enter the Join Date">
+                </div>
+                <div class="text-capitalize my-2">
+                  <label for="speciality">speciality</label>
+                  <select class="form-select" name="speciality" id="speciality" th:value="${doctor.getSpeciality()}">
+                    <option value="Family Medicine">Family Medicine</option>
+                    <option value="Internal Medicine">Internal Medicine</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                  </select>
+                </div>
+                <div class="form-group my-2 d-flex align-items-center">
+                    <input class="form-check" type="checkbox" th:checked="${doctor.isPublished()}" name="published" id="published">
+                    <label class="ms-2" for="published">Publish doctor</label>
+                </div>
+                <div class="d-flex align-items-center justify-content-end mt-3">
+                  <button class="btn btn-outline-danger px-2 me-2" type="reset">
+                    <i class="fa-solid fa-floppy-disk" ></i> Cancel
+                  </button>
+                  <button class="btn btn-danger px-2" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Save
+                  </button>
+                </div>
+              </form>
+            </div>
+            <div class="tab-pane fade show bg-white py-3" id="tab2">
+              <h1 class="mb-3">Doctor Schedule</h1>
+
+
+              <div th:if="${ appointments != null }">
+                <div th:if="${appointments.size() == 0}">
+                  No Appointment found
+                </div>
+                <div th:if="${appointments.size() != 0}" class="row mt-3">
+                  <div class="col-sm-12 col-md-6 col-lg-4 my-1" th:each="appointment : ${appointments}">
+                    <div class="container border-start border-danger border-5  my-1 p-3 rounded bg-light">
+                        <div class="d-flex align-items-center my-1">
+                          <i class="fa-solid fa-clock me-2"></i>
+                          <div th:text="${appointment.getStartTime().toString()}"></div>
+                        </div>
+                        <h4 class="text-capitalize" th:text='${appointment.getPatient().getFirstName() + " " + appointment.getPatient().getLastName()}'></h4>
+                        <div class="d-flex align-items-center my-1">
+                          <i class="fa-solid fa-calendar me-2"></i>
+                          <div class="my-1" th:text="${appointment.getDate()}">
+                        </div>
+                      </div>
+                      <div class="my-2 d-flex align-items-center justify-content-end">
+                          <div th:text="${appointment.getStatus()}" class="badge bg-danger" th:if='${appointment.getStatus().name().equalsIgnoreCase("CANCELED")}'></div>
+                          <div th:text="${appointment.getStatus()}" class="badge bg-warning" th:if='${appointment.getStatus().name().equalsIgnoreCase("RESERVED")}'></div>
+                          <div th:text="${appointment.getStatus()}" class="badge bg-success" th:if='${appointment.getStatus().name().equalsIgnoreCase("COMPLETED")}'></div>
+                          <div th:text="${appointment.getStatus()}" class="badge bg-info" th:if='${appointment.getStatus().name().equalsIgnoreCase( "APPROVED" ) }'></div>
+                          <button th:data-edit-status-btn="${appointment.getId()}" class="btn editStatusBtn" data-bs-toggle="modal" data-bs-target="#editAppointmentStatus">
+                            <i class="fa-solid fa-gear"></i>
+                          </button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="editProfileImageModal" tabindex="-1" aria-labelledby="label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="label">Profile image</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form th:action="@{${'/doctor/' + doctor.getId() + '/editProfile'}}" enctype="multipart/form-data" method="post" class="p-4">
+                <div class="form-group" >
+                  <label for="image">Chose your new profile image</label>
+                  <input type="file" accept="image/*" name="image" id="image" placeholder="Chose your profile image" class="form-control">
+                </div>
+                <div class="d-flex align-items-center justify-content-end mt-4">
+                  <button class="btn btn-outline-danger px-2 me-2" type="reset">
+                    <i class="fa-solid fa-xmark me-1"></i> Cancel
+                  </button>
+                  <button class="btn btn-danger px-2" type="submit">
+                    <i class="fa-solid fa-floppy-disk me-1"></i> Save
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+    <div class="modal fade" id="editAppointmentStatus" tabindex="-1" aria-labelledby="label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="">Appointment</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{${'/appointment/edit-status'}}" enctype="multipart/form-data" method="post" class="p-4">
+              <input type="text" id="appointment-id" name="id" hidden>
+              <input type="text" name="doctorId" th:value="${doctor.getId()}" hidden>
+              <div class="form-group" >
+                <label for="status">Change Status</label>
+                <select id="status" name="status" class="form-select w-100">
+                  <option value="RESERVED">RESERVED</option>
+                  <option value="CANCELED">CANCELED</option>
+                  <option value="COMPLETED">COMPLETED</option>
+                  <option value="APPROVED">APPROVED</option>
+                </select>
+              </div>
+              <div class="d-flex align-items-center justify-content-end mt-4">
+                <button class="btn btn-outline-danger px-2 me-2" type="reset">
+                  <i class="fa-solid fa-xmark me-1"></i> Cancel
+                </button>
+                <button class="btn btn-danger px-2" type="submit">
+                  <i class="fa-solid fa-floppy-disk me-1"></i> Save
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

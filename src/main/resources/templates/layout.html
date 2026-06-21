@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title layout:title-pattern="$CONTENT_TITLE - $CONTENT_TITLE">HMS</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+    <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link th:href="@{/main.css}" rel="stylesheet" />
+    <style>
+        body {
+            width: 100% ;
+            height: 100vh;
+        }
+    </style>
+
+</head>
+<body>
+    <div class="d-flex h-100">
+        <div class="py-5 px-3 border-end h-100" style="width: 20%">
+            <h3 class="navbar-brand text-capitalize fs-3 c-text-primary">HMS</h3>
+            <ul class="navbar-nav nav text-capitalize mt-3">
+                <li
+                        th:class='${
+                            currentUri.equals("/") || currentUri.equals("/index")
+                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            :"nav-item px-2"
+                        }'
+                >
+                    <a href="/" class="nav-link">
+                        <i class="fa-solid fa-house me-2"></i>
+                        home
+                    </a>
+                    <i th:if='${currentUri.equals("/") || currentUri.equals("/index") }' class="fa-solid fa-angle-right"></i>
+                </li>
+                <li
+                        sec:authorize="hasAuthority('ROLE_ADMIN')"
+                        th:class='${
+                            currentUri.equals("/patient/")
+                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            :"nav-item px-2"
+                        }'
+                >
+                    <a href="/patient/" class="nav-link">
+                        <i class="fa-solid fa-bed me-2"></i>
+                        patients
+                    </a>
+                    <i th:if='${currentUri.equals("/patient/")}' class="fa-solid fa-angle-right "></i>
+                </li>
+                <li
+                        th:class='${
+                            currentUri.equals("/doctor/")
+                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            :"nav-item px-2"
+                        }'
+                >
+                    <a href="/doctor/" class="nav-link">
+                        <i class="fa-solid fa-user-doctor me-2"></i>
+                        doctors
+                    </a>
+                    <i th:if='${currentUri.equals("/doctor/")}' class="fa-solid fa-angle-right"></i>
+                </li>
+                <li
+                        sec:authorize="hasAuthority('ROLE_ADMIN')"
+                        th:class='${
+                            currentUri.equals("/appointment/")
+                            ? "nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            : "nav-item px-2"
+                        }'
+                >
+                    <a href="/appointment/" class="nav-link">
+                        <i class="fa-solid fa-business-time me-2"></i>
+                        appointment
+                    </a>
+                    <i th:if='${currentUri.equals("/appointment/")}' class="fa-solid fa-angle-right"></i>
+                </li>
+                <li
+                        sec:authorize="hasAuthority('ROLE_ADMIN')"
+                        th:class='${
+                            currentUri.equals("/user/")
+                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            :"nav-item px-2"
+                        }'
+                >
+                    <a href="/user/" class="nav-link">
+                        <i class="fa-solid fa-user me-2"></i>
+                        users
+                    </a>
+                    <i th:if='${currentUri.equals("/user/")}' class="fa-solid fa-angle-right"></i>
+                </li>
+                <li
+                        sec:authorize="hasAuthority('ROLE_PATIENT')"
+                        th:class='${
+                            currentUri.equals("/patient/my-appointments")
+                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            :"nav-item px-2"
+                        }'
+                >
+                    <a href="/patient/my-appointments" class="nav-link">
+                        <i class="fa-solid fa-business-time me-2"></i>
+                        My Appointment
+                    </a>
+                    <i th:if='${currentUri.equals("/patient/my-appointments")}' class="fa-solid fa-angle-right"></i>
+                </li>
+                <li
+                        sec:authorize="hasAuthority('ROLE_PATIENT')"
+                        th:class='${
+                            currentUri.equals("/patient/my-profile")
+                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            :"nav-item px-2"
+                        }'
+                >
+                    <a href="/patient/my-profile" class="nav-link">
+                        <i class="fa-solid fa-address-book me-2"></i>
+                        Profile
+                    </a>
+                    <i th:if='${currentUri.equals("/patient/my-profile")}' class="fa-solid fa-angle-right"></i>
+                </li>
+                <li
+                        sec:authorize="hasAuthority('ROLE_DOCTOR')"
+                        th:class='${
+                            currentUri.matches("/doctor/\\d+")
+                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
+                            :"nav-item px-2"
+                        }'
+                >
+                    <a href="/doctor/my-profile" class="nav-link">
+                        <i class="fa-solid fa-address-book me-2"></i>
+                        Profile
+                    </a>
+                    <i th:if='${currentUri.matches("/doctor/\\d+")}' class="fa-solid fa-angle-right"></i>
+                </li>
+            </ul>
+        </div>
+        <div class="w-100">
+            <div class="navbar navbar-expand-sm navbar-dark border-bottom">
+                <div class="container d-flex align-items-center">
+                    <button class="btn ">
+                        <i class="fa-solid fa-bars c-text-primary"></i>
+                    </button>
+                    <div class="dropdown me-1">
+                        <button class="btn dropdown-toggle c-text-primary" type="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-user c-text-primary"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end p-1">
+                            <li class="mt-2"><a class="dropdown-item" href="/user/change-password">
+                                <i class="fa-solid fa-key me-2"></i>change password</a>
+                            </li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="btn text-danger"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>logout</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100 position-relative">
+                <div class="container d-flex justify-content-end">
+                    <div th:if="${ successMessage }" class="alert alert-success alert-dismissible fade show w-50 d-flex position-absolute top-10 right-10" role="alert">
+                        <strong>Success!</strong> <div th:text='${" " + successMessage}'></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div th:if="${ errorMessage }" class="alert alert-danger alert-dismissible fade show w-50" role="alert">
+                        <strong>Error! </strong> <div th:text='${ " " + errorMessage }'></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    <div th:if="${ warningMessage }" class="alert alert-warning alert-dismissible fade show w-50" role="alert">
+                        <strong>Warning! </strong> <div th:text='${" " +warningMessage}'></div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+            <div class="px-5 py-4 c-bg-secondary h-100" >
+                <div layout:fragment="content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

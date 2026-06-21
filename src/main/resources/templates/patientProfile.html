@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit My Profile</title>
+  <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link th:href="@{/main.css}" rel="stylesheet" />
+</head>
+<body class="h-100 bg-light">
+  <div layout:fragment="content">
+      <div class="container p-5 my-2">
+              <form method="post" th:action="@{/patient/edit-patient}" class="mx-5 py-5 px-5 rounded-3 border bg-white">
+                <h3 class="fw-bold mb-4 c-text-primary">Edit profile</h3>
+                <div class="text-capitalize my-2 d-flex align-items-center justify-content-between">
+                  <input name="id" th:value="${patient.getId()}" hidden>
+                  <div class="w-50 me-1">
+                    <label for="firstName">FirstName :</label>
+                    <input id="firstName" name="firstName" th:value="${patient.getFirstName()}"  class="form-control w-100">
+                  </div>
+                  <div class="w-50 ms-1">
+                    <label for="lastName">LastName :</label>
+                    <input id="lastName" name="lastName" th:value="${patient.getLastName()}" class="form-control w-100">
+                  </div>
+                </div>
+                <div class="w-100">
+                  <label for="cin">CIN :</label>
+                  <input type="text" id="cin" name="cin" th:value="${patient.getCin()}" class="form-control w-100">
+                </div>
+                <div class="form-group my-2">
+                  <label for="birthDate">Birth Date</label>
+                  <input class="form-control" th:value="${patient.getBirthDate()}" type="date" name="birthDate" id="birthDate" placeholder="enter the Birth Date">
+                </div>
+                <div class="text-capitalize my-2">
+                  <label for="gender">Gender</label>
+                  <select class="form-select" name="gender" id="gender" th:selected="${patient.getGender()}">
+                    <option value="MALE">MALE</option>
+                    <option value="FEMALE">FEMALE</option>
+                  </select>
+                </div>
+                <div class="d-flex align-items-center justify-content-end mt-3">
+                  <button class="btn c-outline-primary px-4 me-2" type="reset">
+                    <i class="fa-solid fa-floppy-disk" ></i> Cancel
+                  </button>
+                  <button class="btn c-btn-primary text-white px-4" type="submit">
+                    <i class="fa-solid fa-floppy-disk"></i> Save
+                  </button>
+                </div>
+              </form>
+            </div>
+      </div>
+  <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

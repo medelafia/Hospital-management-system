@@ -1,0 +1,30 @@
+.c-bg-primary {
+    background-color: #443199;
+}
+.c-btn-primary{
+    background-color: #443199;
+    transition: background-color 0.3s ease;
+    color: white;
+}
+.c-btn-primary:hover {
+    background-color: #443189;
+    color: white;
+}
+.c-text-primary  {
+    color: #443199;
+}
+
+.c-outline-primary {
+    border : 1px solid #443199 ;
+    color: #443199;
+    transition: background-color 0.3s ease;
+}
+.c-outline-primary:hover {
+    border : 1px solid #443189 ;
+    color: #443199;
+    background-color: #F5F3FF;
+}
+
+.c-bg-secondary {
+    background-color: #F5F3FF;
+}

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Doctors</title>
+    <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="d-flex align-items-center justify-content-between">
+            <h2 class="text-capitalize">#All Appointment</h2>
+        </div>
+
+        <div th:if="${appointments.size() == 0}">
+            No Appointment found
+        </div>
+        <div th:if="${appointments.size() != 0}" class="row mt-3">
+            <div class="col-sm-12 col-md-6 col-lg-4 my-1" th:each="appointment : ${appointments}">
+                <div class="container border-start border-danger border-5  my-1 p-3 rounded bg-white">
+                    <div class="d-flex align-items-center my-1">
+                        <i class="fa-solid fa-clock me-2"></i>
+                        <div th:text="${appointment.getStartTime().toString()}"></div>
+                    </div>
+                    <h4 class="text-capitalize" th:text='${appointment.getDoctor().getFirstName() + " " + appointment.getDoctor().getLastName()}'></h4>
+                    <div class="d-flex align-items-center my-1">
+                        <i class="fa-solid fa-calendar me-2"></i>
+                        <div class="my-1" th:text="${appointment.getDate()}">
+                        </div>
+
+                    </div>
+                    <div class="my-2 d-flex align-items-center justify-content-end">
+                        <div th:text="${appointment.getStatus()}" class="badge bg-danger" th:if='${appointment.getStatus().name().equalsIgnoreCase("CANCELED")}'></div>
+                        <div th:text="${appointment.getStatus()}" class="badge bg-warning" th:if='${appointment.getStatus().name().equalsIgnoreCase("RESERVED")}'></div>
+                        <div th:text="${appointment.getStatus()}" class="badge bg-success" th:if='${appointment.getStatus().name().equalsIgnoreCase("COMPLETED")}'></div>
+                        <div th:text="${appointment.getStatus()}" class="badge bg-info" th:if='${appointment.getStatus().name().equalsIgnoreCase( "APPROVED" ) }'></div>
+                        <button th:data-edit-status-btn="${appointment.getId()}" class="btn editStatusBtn" data-bs-toggle="modal" data-bs-target="#editAppointmentStatus">
+                            <i class="fa-solid fa-gear"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-center mt-4 w-100">
+            <a class="btn btn-outline-dark mx-1" th:each="number : ${numberOfPages}" th:href='@{${"/appointment/?size=" + size + "&pageNumber=" + number}}'  th:text="${number}" href="" ></a>
+        </div>
+    </div>
+    <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
