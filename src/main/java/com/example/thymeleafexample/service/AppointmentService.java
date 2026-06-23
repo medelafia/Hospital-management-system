@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -28,6 +29,12 @@ public class AppointmentService {
     @Autowired
     private PatientRepo patientRepo ;
 
+    public List<Appointment> getTodayAppointments(){
+        return appointmentRepo.findAllByDate(Date.valueOf(LocalDate.now()));
+    }
+    public Long getAppointmentsCount() {
+        return appointmentRepo.count();
+    }
     public Appointment addAppointment(Date date, int doctorId , int patientId , Time time ) {
         Patient patient = patientRepo.findById(patientId).orElseThrow(()-> new RuntimeException("Patient not found")) ;
         Doctor doctor = doctorRepo.findById(doctorId).orElseThrow(()-> new RuntimeException("Doctor not found")) ;

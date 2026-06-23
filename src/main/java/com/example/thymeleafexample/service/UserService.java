@@ -32,6 +32,11 @@ public class UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+
+
+    public Long getUserCount() {
+        return this.userRepository.count();
+    }
     public User save(User user) {
         if(userRepository.findByUsername(user.getUsername()).isPresent()) {
             throw new UsernameAlreadyTakenException(user.getUsername() + " already exists");

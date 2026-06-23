@@ -14,6 +14,11 @@ public class PatientService {
     @Autowired
     PatientRepo patientRepo ;
 
+
+
+    public Long getPatientsCount() {
+        return patientRepo.count();
+    }
     public Patient addPatient(Patient patient) {
         return patientRepo.save(patient ) ;
     }

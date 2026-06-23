@@ -24,6 +24,10 @@ public class DoctorService {
     public DoctorRepo doctorRepo ;
     @Autowired
     public AppointmentRepo appointmentRepo ;
+
+    public Long getDoctorsCount() {
+        return this.doctorRepo.count();
+    }
     public Doctor addDoctor(Doctor doctor , MultipartFile image) throws IOException {
         Doctor savedDoctor = doctorRepo.save(doctor) ;
         if(image != null && !image.isEmpty()) {
@@ -54,4 +58,5 @@ public class DoctorService {
     public boolean checkAvailable(int doctorId , Date date, Time time) {
         return appointmentRepo.findByDateAndStartTimeAndDoctor(date , time , doctorRepo.findById(doctorId).orElseThrow(() -> new EntityNotFoundException("Doctor not found")) ).isPresent() ;
     }
+
 }

@@ -23,19 +23,19 @@
       });
     });
   </script>
-
+  <link th:href="@{/main.css}" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
   <div layout:fragment="content">
       <div class="row">
-        <div class="col-sm-3 py-3 bg-white rounded-3 border" style="height: min-content">
-          <div class="container d-flex align-items-center justify-content-start flex-column">
+        <div class="col-sm-4" style="height: min-content">
+          <div class="d-flex align-items-center justify-content-start flex-column py-3 bg-white rounded-3">
             <img style="object-fit: cover; object-position: 50% 50% ;" th:src="@{${'/doctor/image/' + doctor.getId()}}" width="200px" height="200px" class="rounded-circle"/>
             <div class="d-flex align-items-start justify-content-center flex-column mt-2" >
               <h2 class="text-capitalize" th:text='${ doctor.getFirstName()+ " " + doctor.getLastName()}'></h2>
-              <p class="badge bg-danger" th:text="${doctor.getSpeciality()}"></p>
+              <p class="badge glass-red" th:text="${doctor.getSpeciality()}"></p>
               <div class="d-flex align-items-center justify-content-start my-1">
                 <i class="fa-solid fa-envelope me-2"></i>
                 <div th:text="${doctor.getEmail()}"></div>
@@ -74,8 +74,8 @@
             </li>
           </ul>
 
-          <div class="tab-content bg-white border">
-            <div class="tab-pane fade show p-4 active " id="tab1">
+          <div class="tab-content bg-white">
+            <div class="tab-pane fade show py-4 px-5 active " id="tab1">
               <form method="post" th:action="@{/doctor/edit-doctor}" class="">
                 <div class="text-capitalize my-2 d-flex align-items-center justify-content-between">
                   <input name="id" th:value="${doctor.getId()}" hidden="true">
@@ -123,26 +123,36 @@
                     <label class="ms-2" for="published">Publish doctor</label>
                 </div>
                 <div class="d-flex align-items-center justify-content-end mt-3">
-                  <button class="btn btn-outline-danger px-2 me-2" type="reset">
+                  <button class="btn c-outline-primary px-2 me-2" type="reset">
                     <i class="fa-solid fa-floppy-disk" ></i> Cancel
                   </button>
-                  <button class="btn btn-danger px-2" type="submit">
+                  <button class="btn c-btn-primary px-2" type="submit">
                     <i class="fa-solid fa-floppy-disk"></i> Save
                   </button>
                 </div>
               </form>
             </div>
-            <div class="tab-pane fade show bg-white py-3" id="tab2">
-              <h1 class="mb-3">Doctor Schedule</h1>
-
-
+            <div class="tab-pane fade show bg-white py-3 px-5" id="tab2">
+              <div class="d-flex align-items-center justify-content-between">
+                <h1 class="mb-3">Doctor Schedule</h1>
+                <form class="d-flex align-items-center">
+                  <select  name="status" class="form-select w-min">
+                    <option value="NONE">--select status--</option>
+                    <option value="RESERVED" th:selected='${status == "RESERVER"}'>RESERVED</option>
+                    <option value="CANCELED" th:selected='${status == "CANCELED"}'>CANCELED</option>
+                    <option value="COMPLETED" th:selected='${status == "COMPLETED"}'>COMPLETED</option>
+                    <option value="APPROVED" th:selected='${status == "APPROVED"}'>APPROVED</option>
+                  </select>
+                  <button class="btn c-outline-primary ms-2"><i class="fa-solid fa-filter"></i></button>
+                </form>
+              </div>
               <div th:if="${ appointments != null }">
                 <div th:if="${appointments.size() == 0}">
                   No Appointment found
                 </div>
                 <div th:if="${appointments.size() != 0}" class="row mt-3">
-                  <div class="col-sm-12 col-md-6 col-lg-4 my-1" th:each="appointment : ${appointments}">
-                    <div class="container border-start border-danger border-5  my-1 p-3 rounded bg-light">
+                  <div class="col-sm-12 col-md-6 my-1" th:each="appointment : ${appointments}">
+                    <div class="container border-start border-danger border-5  my-1 p-3 rounded c-bg-secondary">
                         <div class="d-flex align-items-center my-1">
                           <i class="fa-solid fa-clock me-2"></i>
                           <div th:text="${appointment.getStartTime().toString()}"></div>

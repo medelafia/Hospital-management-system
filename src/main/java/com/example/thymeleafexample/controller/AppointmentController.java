@@ -76,4 +76,5 @@ public class AppointmentController {
         this.appointmentService.editAppointmentStatus(id, status);
         return "redirect:/doctor/"+doctorId+"?successMessage=Appointment Edited";
     }
+
 }

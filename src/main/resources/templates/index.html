@@ -1,6 +1,9 @@
 <!doctype html>
-<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
+<html lang="en"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}"
+      xmlns:th="http://www.thymeleaf.org"
+>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -8,24 +11,90 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home</title>
     <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
-    <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+    <link th:href="@{/main.css}" rel="stylesheet" />
 </head>
-<body>
+<body class="bg-white">
     <div layout:fragment="content">
-        <div class="row">
-            <div class="col-sm-4">
-                <div class="container p-3 rounded border">
+        <h1 class="f-bold mb-3" style="font-size: 1.5rem">Welcome back!</h1>
+        <div class="row text-white">
+            <div class="col-sm-3">
+                <div class="container p-3 rounded-3 d-flex align-items-center" style="background-color:#4A90D9">
+                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px">
+                        <i class="fa-solid fa-bed"></i>
+                    </span>
+                    <div class="ms-2">
+                        <span class="font-bold" style="font-size: 1.2rem" th:text="${patientsCount}"></span>
+                        <br />
+                        Patients
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="container p-3 rounded-3 d-flex align-items-center" style="background-color:#2ECC71">
+                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px">
+                        <i class="fa-solid fa-user"></i>
+                    </span>
+                    <div class="ms-2">
+                        <span class="font-bold" style="font-size: 1.2rem" th:text="${usersCount}"></span>
+                        <br />
+                        Users
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="container p-3 rounded-3 d-flex align-items-center"  style="background-color:#F39C12">
+                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px">
+                        <i class="fa-solid fa-business-time"></i>
+                    </span>
+                    <div class="ms-2">
+                        <span class="font-bold" style="font-size: 1.2rem" th:text="${appointmentsCount}"></span>
+                        <br />
+                        Appointments
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <div class="container p-3 rounded-3 d-flex align-items-center" style="background-color:#E74C3C">
+                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px"><i class="fa-solid fa-user-doctor"></i></span>
+                    <div class="ms-2">
+                        <span class="font-bold" style="font-size: 1.2rem" th:text="${doctorsCount}"></span>
+                        <br />
+                        Doctors
+                    </div>
 
                 </div>
             </div>
-            <div class="col-sm-4">
-                <div class="container p-3 rounded border">
+        </div>
 
+
+        <div class="row mt-4">
+
+            <div class="col-md-4">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5>Today's appointments</h5>
+                    <a href="/appointments" class="text-decoration-none">see all</a>
                 </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="container p-3 rounded border">
 
+                <div class="bg-white rounded-3 p-3 mt-3">
+                    <div th:if="${appointments.isEmpty()}">no appointments today</div>
+                    <div class="d-flex justify-content-between align-items-start" th:if="${!appointments.isEmpty()}" th:each="appointment : ${appointments}">
+                        <div>
+                            <h6 th:text='${appointment.getPatient().getFirstName() + " " +appointment.getPatient().getLastName()}'></h6>
+                            <p  class="text-secondary">
+                                <i class="fa-regular fa-clock me-2"></i>
+                                <span th:text='${appointment.getStartTime().toString()}'></span>
+                            </p>
+                        </div>
+                        <div th:text="${appointment.getStatus()}" class="badge glass-red" th:if='${appointment.getStatus().name().equalsIgnoreCase("CANCELED")}'></div>
+                        <div th:text="${appointment.getStatus()}" class="badge glass-yellow" th:if='${appointment.getStatus().name().equalsIgnoreCase("RESERVED")}'></div>
+                        <div th:text="${appointment.getStatus()}" class="badge glass-green" th:if='${appointment.getStatus().name().equalsIgnoreCase("COMPLETED")}'></div>
+                        <div th:text="${appointment.getStatus()}" class="badge glass-blue" th:if='${appointment.getStatus().name().equalsIgnoreCase( "APPROVED" ) }'></div>
+                    </div>
+
+                    <div th:if="${!appointments.isEmpty()}" class="d-flex justify-content-end">
+                        <a href="/index" class="btn btn-outline-success me-1"><i class="fa-solid fa-angle-left"></i></a>
+                        <a href="/index" class="btn btn-outline-success ms-1"><i class="fa-solid fa-angle-right"></i></a>
+                    </div>
                 </div>
             </div>
         </div>

@@ -20,4 +20,5 @@ public interface AppointmentRepo extends JpaRepository<Appointment , Integer> {
     List<Appointment> findByDoctorAndDate(Doctor doctor , Date date) ;
 
     Page<Appointment> findByPatient(Patient patient, Pageable pageable);
+    List<Appointment> findAllByDate(Date date);
 }

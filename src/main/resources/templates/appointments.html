@@ -69,10 +69,10 @@
                         <td th:text="${appointment.getDate()}"></td>
                         <td th:text="${appointment.getStartTime()}"></td>
                         <td>
-                            <div th:text="${appointment.getStatus()}" class="badge bg-danger" th:if='${appointment.getStatus().name().equalsIgnoreCase("CANCELED")}'></div>
-                            <div th:text="${appointment.getStatus()}" class="badge bg-warning" th:if='${appointment.getStatus().name().equalsIgnoreCase("RESERVED")}'></div>
-                            <div th:text="${appointment.getStatus()}" class="badge bg-success" th:if='${appointment.getStatus().name().equalsIgnoreCase("COMPLETED")}'></div>
-                            <div th:text="${appointment.getStatus()}" class="badge bg-info" th:if='${appointment.getStatus().name().equalsIgnoreCase( "APPROVED" ) }'></div>
+                            <div th:text="${appointment.getStatus()}" class="badge glass-red" th:if='${appointment.getStatus().name().equalsIgnoreCase("CANCELED")}'></div>
+                            <div th:text="${appointment.getStatus()}" class="badge glass-yellow" th:if='${appointment.getStatus().name().equalsIgnoreCase("RESERVED")}'></div>
+                            <div th:text="${appointment.getStatus()}" class="badge glass-green" th:if='${appointment.getStatus().name().equalsIgnoreCase("COMPLETED")}'></div>
+                            <div th:text="${appointment.getStatus()}" class="badge glass-blue" th:if='${appointment.getStatus().name().equalsIgnoreCase( "APPROVED" ) }'></div>
                         </td>
                     </tr>
                 </tbody>
