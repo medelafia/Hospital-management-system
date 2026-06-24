@@ -1,6 +1,7 @@
 package com.example.thymeleafexample.controller;
 
 import com.example.thymeleafexample.entity.Appointment;
+import com.example.thymeleafexample.entity.Statistic;
 import com.example.thymeleafexample.service.AppointmentService;
 import com.example.thymeleafexample.service.DoctorService;
 import com.example.thymeleafexample.service.PatientService;
@@ -34,11 +35,15 @@ public class GlobalController {
     @GetMapping("/index")
     public String index(Model model) {
         List<Appointment> appointments = appointmentService.getTodayAppointments() ;
+        Statistic statistic = this.appointmentService.getAppointmentStatistics(2026);
         model.addAttribute("usersCount" , userService.getUserCount());
         model.addAttribute("patientsCount" , patientService.getPatientsCount());
         model.addAttribute("appointmentsCount" , appointmentService.getAppointmentsCount());
         model.addAttribute("doctorsCount" , doctorService.getDoctorsCount());
         model.addAttribute("appointments" , appointments != null ? appointments : Collections.emptyList());
+
+        model.addAttribute("labels" , statistic.getLabels());
+        model.addAttribute("values" , statistic.getValues());
 
         return "index" ;
     }

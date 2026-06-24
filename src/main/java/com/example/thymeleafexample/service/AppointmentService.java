@@ -4,6 +4,7 @@ import com.example.thymeleafexample.customExceptions.EntityNotFoundException;
 import com.example.thymeleafexample.entity.Appointment;
 import com.example.thymeleafexample.entity.Doctor;
 import com.example.thymeleafexample.entity.Patient;
+import com.example.thymeleafexample.entity.Statistic;
 import com.example.thymeleafexample.enums.AppointmentStatus;
 import com.example.thymeleafexample.repository.AppointmentRepo;
 import com.example.thymeleafexample.repository.DoctorRepo;
@@ -17,8 +18,12 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AppointmentService {
@@ -28,6 +33,8 @@ public class AppointmentService {
     private DoctorRepo doctorRepo ;
     @Autowired
     private PatientRepo patientRepo ;
+
+    Statistic statistic = new Statistic(null, null );
 
     public List<Appointment> getTodayAppointments(){
         return appointmentRepo.findAllByDate(Date.valueOf(LocalDate.now()));
@@ -70,5 +77,17 @@ public class AppointmentService {
         appointment.setStatus(AppointmentStatus.valueOf(status));
 
         return appointmentRepo.save(appointment) ;
+    }
+
+    public Statistic getAppointmentStatistics(int year) {
+        List<Long> values = new ArrayList<>();
+        List<Object> labels = new ArrayList<>();
+        for(Object[] obj : this.appointmentRepo.countAppointmentsByMonth(year)){
+            values.add((Long) obj[1]);
+            labels.add(Month.of((Integer) obj[0]).name());
+        }
+        this.statistic.setValues(values);
+        this.statistic.setLabels(labels);
+        return this.statistic ;
     }
 }

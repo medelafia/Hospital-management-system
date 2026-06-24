@@ -77,4 +77,5 @@ public class AppointmentController {
         return "redirect:/doctor/"+doctorId+"?successMessage=Appointment Edited";
     }
 
+
 }

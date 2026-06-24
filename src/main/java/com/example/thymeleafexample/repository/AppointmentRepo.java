@@ -7,6 +7,8 @@ import org.aspectj.weaver.patterns.AndPointcut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
 import java.sql.Time;
@@ -21,4 +23,13 @@ public interface AppointmentRepo extends JpaRepository<Appointment , Integer> {
 
     Page<Appointment> findByPatient(Patient patient, Pageable pageable);
     List<Appointment> findAllByDate(Date date);
+    @Query("""
+    SELECT MONTH(a.date) , COUNT(a)
+    FROM Appointment a
+    WHERE YEAR(a.date) = :year
+    GROUP BY MONTH(a.date)
+    ORDER BY MONTH(a.date)
+    """)
+    List<Object[]> countAppointmentsByMonth(@Param("year") int year);
+
 }

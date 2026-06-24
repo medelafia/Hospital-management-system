@@ -68,7 +68,32 @@
 
 
         <div class="row mt-4">
+            <div class="col-sm-6">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h5 class="w-content">Monthly Sales Performance Overview</h5>
+                    <select  name="status" class="form-select" style="width: 20%">
+                        <option value="NONE">--Year--</option>
+                        <option value="RESERVED">2022</option>
+                        <option value="CANCELED">2023</option>
+                        <option value="COMPLETED">2024</option>
+                        <option value="APPROVED">2025</option>
+                        <option value="APPROVED">2026</option>
 
+                    </select>
+                </div>
+
+                <!-- The graph canvas targeting container -->
+                <div class="bg-white p-4 rounded-3 mt-3" style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="appointmentsChart" > </canvas>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <h5>Gender</h5>
+                <!-- The graph canvas targeting container -->
+                <div class="bg-white p-4 rounded-3 mt-3" style="position: relative; height: 200px; width: 100%;">
+                    <canvas id="genderChart" > </canvas>
+                </div>
+            </div>
             <div class="col-md-4">
                 <div class="d-flex align-items-center justify-content-between">
                     <h5>Today's appointments</h5>
@@ -97,9 +122,74 @@
                     </div>
                 </div>
             </div>
+
         </div>
+        <script th:inline="javascript">
+            document.addEventListener("DOMContentLoaded", () => {
+                /* Thymeleaf loads Java collections as native JSON variables safely */
+
+
+                const labelsData = [[${labels}]] ;
+                const numericData = [[${values}]];
+                console.log(labelsData)
+
+                // Initialize and bind the Chart.js configuration
+                const ctx = document.getElementById('appointmentsChart').getContext('2d');
+                const appointmentsChart = new Chart(ctx, {
+                    type: 'bar', // Type options include: 'line', 'pie', 'doughnut', 'radar'
+                    data: {
+                        labels: labelsData, // Populated from Java list
+                        datasets: [{
+                            label: 'Number of appointments',
+                            data: numericData, // Populated from Java list
+                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                const ctxChartGender = document.getElementById('genderChart').getContext('2d');
+                const genderChart = new Chart(ctxChartGender, {
+                    type: 'doughnut', // Type options include: 'line', 'pie', 'doughnut', 'radar'
+                        data: {
+                            labels: [
+                                'Men',
+                                'Women'
+                            ],
+                            datasets: [{
+                                label: 'Patients gender percentage',
+                                data: [300, 50 ],
+                                backgroundColor: [
+                                    '#E74C3C',
+                                    '#F39C12'
+                                ],
+                                hoverOffset: 4
+                            }]
+                        },
+                        options : {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }
+                });
+
+            })
+        </script>
     </div>
 
     <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
