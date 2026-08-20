@@ -1,44 +1,77 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
-<head>
-    <meta charset="UTF-8">
+<!doctype html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+>
+  <head>
+    <meta charset="UTF-8" />
     <title>Add Patient</title>
 
-    <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css"
+    />
     <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link th:href="@{/main.css}" rel="stylesheet" />
-</head>
-<body>
+  </head>
+  <body>
     <div layout:fragment="content">
-        <div class="container my-3">
-            <h4 class="text-capitalize fw-bold">book you appointment</h4>
-            <hr>
-            <div class="d-flex align-items-center justify-content-between">
-                <div class="d-flex align-items-start justify-content-start">
-                    <img th:src='@{${"/doctor/image/" + doctor.getId()}}' width="70px" height="70px" style="object-fit: cover" class="rounded-circle">
-                    <div class="ms-2">
-                        <h5 class="text-capitalize" th:text='${doctor.getFirstName() + " " + doctor.getLastName()}'></h5>
-                        <div class="badge bg-danger" th:text="${doctor.getSpeciality()}"> </div>
-                    </div>
-                </div>
-                <div class="d-flex align-items-center justify-content-between">
-                    <a th:if="${page > 1}" th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + selectedDate + "&page=" + (page - 1) }}' class="btn btn-dark"><i class="fa-solid fa-chevron-left"></i></a>
-                    <div class="mx-2 fw-bold" th:text='${days.get(0).toLocalDate().getDayOfMonth() + " - " +days.get(days.size() - 1).toLocalDate().getDayOfMonth() + " " + days.get(0).toLocalDate().getMonth().name() + " " + days.get(0).toLocalDate().getYear() }'>
-                    </div>
-                    <a th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + selectedDate + "&page=" + (page + 1) }}' class="btn btn-dark">
-                        <i class="fa-solid fa-chevron-right"></i>
-                    </a>
-                </div>
+      <div class="container my-3">
+        <h4 class="text-capitalize fw-bold">book you appointment</h4>
+        <hr />
+        <div class="d-flex align-items-center justify-content-between">
+          <div class="d-flex align-items-start justify-content-start">
+            <img
+              th:src='@{${"/doctor/image/" + doctor.getId()}}'
+              width="70px"
+              height="70px"
+              style="object-fit: cover"
+              class="rounded-circle"
+            />
+            <div class="ms-2">
+              <h5
+                class="text-capitalize"
+                th:text='${doctor.getFirstName() + " " + doctor.getLastName()}'
+              ></h5>
+              <div
+                class="badge bg-danger"
+                th:text="${doctor.getSpeciality()}"
+              ></div>
             </div>
-            <hr>
+          </div>
+          <div class="d-flex align-items-center justify-content-between">
+            <a
+              th:if="${page > 1}"
+              th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + selectedDate + "&page=" + (page - 1) }}'
+              class="btn btn-dark"
+              ><i class="fa-solid fa-chevron-left"></i
+            ></a>
+            <div
+              class="mx-2 fw-bold"
+              th:text='${days.get(0).toLocalDate().getDayOfMonth() + " - " +days.get(days.size() - 1).toLocalDate().getDayOfMonth() + " " + days.get(0).toLocalDate().getMonth().name() + " " + days.get(0).toLocalDate().getYear() }'
+            ></div>
+            <a
+              th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + selectedDate + "&page=" + (page + 1) }}'
+              class="btn btn-dark"
+            >
+              <i class="fa-solid fa-chevron-right"></i>
+            </a>
+          </div>
+        </div>
+        <hr />
 
-            <h5 class="fw-bold text-capitalize mt-3">book date</h5>
-            <div class="py-2 d-flex align-items-start justify-content-start mt-2">
-                <!--<div th:each="day : ${days}" class="card mx-1" style="width: 18rem;">
+        <h5 class="fw-bold text-capitalize mt-3">book date</h5>
+        <div class="py-2 d-flex align-items-start justify-content-start mt-2">
+          <!--<div th:each="day : ${days}" class="card mx-1" style="width: 18rem;">
                     <div class="card-header d-flex align-items-start justify-content-between">
                         <div class="d-flex align-items-center justify-content-center flex-column">
                             <div class="text-capitalize " th:text='${day.toLocalDate().getDayOfWeek().name().substring(0 , 3)}'></div>
@@ -53,35 +86,65 @@
 
                     </div>
                 </div>-->
-                <div th:each="day : ${days}" class="d-flex align-items-center justify-content-center flex-column me-3">
-                    <a
-                        th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + day + "&page="+page}}'
-                        th:class='${selectedDate.compareTo(day) == 0 ? "btn btn-dark text-capitalize me-1 py-3 px-4" : "btn btn-outline-dark text-capitalize me-1 py-3 px-4" }'>
-                        <div class="text-capitalize h4" th:text='${day.toLocalDate().getDayOfMonth()}'></div>
-                        <div class="text-capitalize" style="font-size: 0.6rem;" th:text='${day.toLocalDate().getDayOfWeek().name().substring(0 , 3)}'></div>
-                    </a>
-                </div>
-            </div>
-            <h5 class="fw-bold text-capitalize mt-3">appointment time</h5>
-            <div class="d-flex align-items-center justify-content-start mt-3">
-                <a
-                    th:each="time : ${times}"
-                    th:text="${time.toString()}"
-                    th:class='${( selectedTime != null && time.compareTo(selectedTime) == 0 ) ? "btn btn-dark  rounded-pill me-3" : "btn btn-outline-dark  rounded-pill me-3"}'
-                    th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + selectedDate + "&page=" + page + "&selectedTime=" + time }}'
-                >
-                </a>
-            </div>
-
-            <form th:action='@{${ "/doctor/" + doctor.getId() + "/book-appointment" }}' method="post">
-                <input type="date" name="selectedDate" hidden th:value="${selectedDate}">
-                <input type="time" name="selectedTime" hidden th:value="${selectedTime}">
-                <input type="number" name="patientId" hidden th:value="1">
-                <button type="submit" th:if="${selectedTime}" class="btn c-btn-primary fw-bold mt-4 text-capitalize px-4"><i class="fa-solid fa-calendar-check me-2"></i>book now</button>
-            </form>
+          <div
+            th:each="day : ${days}"
+            class="d-flex align-items-center justify-content-center flex-column me-3"
+          >
+            <a
+              th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + day + "&page="+page}}'
+              th:class='${selectedDate.compareTo(day) == 0 ? "btn btn-dark text-capitalize me-1 py-3 px-4" : "btn btn-outline-dark text-capitalize me-1 py-3 px-4" }'
+            >
+              <div
+                class="text-capitalize h4"
+                th:text="${day.toLocalDate().getDayOfMonth()}"
+              ></div>
+              <div
+                class="text-capitalize"
+                style="font-size: 0.6rem"
+                th:text="${day.toLocalDate().getDayOfWeek().name().substring(0 , 3)}"
+              ></div>
+            </a>
+          </div>
         </div>
+        <h5 class="fw-bold text-capitalize mt-3">appointment time</h5>
+        <div class="d-flex align-items-center justify-content-start mt-3">
+          <a
+            th:each="time : ${times}"
+            th:text="${time.toString()}"
+            th:class='${( selectedTime != null && time.compareTo(selectedTime) == 0 ) ? "btn btn-dark  rounded-pill me-3" : "btn btn-outline-dark  rounded-pill me-3"}'
+            th:href='@{${"/doctor/" + doctor.getId() + "/book-appointment?selectedDate=" + selectedDate + "&page=" + page + "&selectedTime=" + time }}'
+          >
+          </a>
+        </div>
+
+        <form
+          th:action='@{${ "/doctor/" + doctor.getId() + "/book-appointment" }}'
+          method="post"
+        >
+          <input
+            type="date"
+            name="selectedDate"
+            hidden
+            th:value="${selectedDate}"
+          />
+          <input
+            type="time"
+            name="selectedTime"
+            hidden
+            th:value="${selectedTime}"
+          />
+          <input type="number" name="patientId" hidden th:value="1" />
+          <button
+            type="submit"
+            th:if="${selectedTime}"
+            class="btn c-btn-primary fw-bold mt-4 text-capitalize px-4"
+          >
+            <i class="fa-solid fa-calendar-check me-2"></i>book now
+          </button>
+        </form>
+      </div>
     </div>
 
     <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
-</body>
+  </body>
 </html>

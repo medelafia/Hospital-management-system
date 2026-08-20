@@ -1,57 +1,205 @@
-<!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
-<head>
-  <meta charset="UTF-8">
-  <title>Edit My Profile</title>
-  <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link th:href="@{/main.css}" rel="stylesheet" />
-</head>
-<body class="h-100 bg-light">
-  <div layout:fragment="content">
-      <div class="container p-5 my-2">
-              <form method="post" th:action="@{/patient/edit-patient}" class="mx-5 py-5 px-5 rounded-3 border bg-white">
-                <h3 class="fw-bold mb-4 c-text-primary">Edit profile</h3>
-                <div class="text-capitalize my-2 d-flex align-items-center justify-content-between">
-                  <input name="id" th:value="${patient.getId()}" hidden>
-                  <div class="w-50 me-1">
-                    <label for="firstName">FirstName :</label>
-                    <input id="firstName" name="firstName" th:value="${patient.getFirstName()}"  class="form-control w-100">
+<!doctype html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Edit My Profile</title>
+    <link
+      rel="stylesheet"
+      href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link th:href="@{/main.css}" rel="stylesheet" />
+  </head>
+  <body class="h-100 bg-light">
+    <div layout:fragment="content" class="patient-page">
+      <div class="container-fluid py-4 px-4 px-lg-5">
+        <!-- Page Header -->
+        <div class="page-header mb-4">
+          <div>
+            <span class="text-muted small">Patient Management</span>
+
+            <h1 class="page-title mb-1">Patient Profile</h1>
+
+            <p class="text-muted mb-0">
+              Update and manage the patient's personal information.
+            </p>
+          </div>
+
+          <div class="patient-badge">
+            <i class="fa-solid fa-user me-2"></i>
+            Patient
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-12 col-xl-9">
+            <div class="patient-card">
+              <!-- Card Header -->
+              <div class="patient-card-header">
+                <div class="header-icon">
+                  <i class="fa-solid fa-user-pen"></i>
+                </div>
+
+                <div>
+                  <h3>Edit Profile</h3>
+                  <p>Keep the patient's information up to date.</p>
+                </div>
+              </div>
+
+              <!-- Form -->
+              <form method="post" th:action="@{/patient/edit-patient}">
+                <input name="id" th:value="${patient.getId()}" type="hidden" />
+
+                <div class="form-section">
+                  <div class="section-title">
+                    <i class="fa-solid fa-id-card"></i>
+                    <span>Personal Information</span>
                   </div>
-                  <div class="w-50 ms-1">
-                    <label for="lastName">LastName :</label>
-                    <input id="lastName" name="lastName" th:value="${patient.getLastName()}" class="form-control w-100">
+
+                  <div class="row g-4">
+                    <!-- First Name -->
+                    <div class="col-md-6">
+                      <label for="firstName"> First Name </label>
+
+                      <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                          id="firstName"
+                          name="firstName"
+                          th:value="${patient.getFirstName()}"
+                          class="modern-input"
+                          type="text"
+                          placeholder="Enter first name"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Last Name -->
+                    <div class="col-md-6">
+                      <label for="lastName"> Last Name </label>
+
+                      <div class="input-wrapper">
+                        <i class="fa-solid fa-user"></i>
+
+                        <input
+                          id="lastName"
+                          name="lastName"
+                          th:value="${patient.getLastName()}"
+                          class="modern-input"
+                          type="text"
+                          placeholder="Enter last name"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- CIN -->
+                    <div class="col-md-6">
+                      <label for="cin"> CIN </label>
+
+                      <div class="input-wrapper">
+                        <i class="fa-solid fa-id-card"></i>
+
+                        <input
+                          type="text"
+                          id="cin"
+                          name="cin"
+                          th:value="${patient.getCin()}"
+                          class="modern-input"
+                          placeholder="Enter CIN"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Birth Date -->
+                    <div class="col-md-6">
+                      <label for="birthDate"> Birth Date </label>
+
+                      <div class="input-wrapper">
+                        <i class="fa-solid fa-calendar"></i>
+
+                        <input
+                          class="modern-input"
+                          th:value="${patient.getBirthDate()}"
+                          type="date"
+                          name="birthDate"
+                          id="birthDate"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Gender -->
+                    <div class="col-md-6">
+                      <label for="gender"> Gender </label>
+
+                      <div class="input-wrapper">
+                        <i class="fa-solid fa-venus-mars"></i>
+
+                        <select class="modern-input" name="gender" id="gender">
+                          <option
+                            value="MALE"
+                            th:selected="${patient.getGender() != null and patient.getGender().name() == 'MALE'}"
+                          >
+                            Male
+                          </option>
+
+                          <option
+                            value="FEMALE"
+                            th:selected="${patient.getGender() != null and patient.getGender().name() == 'FEMALE'}"
+                          >
+                            Female
+                          </option>
+                        </select>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="w-100">
-                  <label for="cin">CIN :</label>
-                  <input type="text" id="cin" name="cin" th:value="${patient.getCin()}" class="form-control w-100">
+
+                <!-- Information notice -->
+                <div class="info-notice">
+                  <div class="notice-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                  </div>
+
+                  <div>
+                    <strong>Keep information accurate</strong>
+
+                    <p>
+                      Make sure the patient's personal information is correct
+                      before saving the changes.
+                    </p>
+                  </div>
                 </div>
-                <div class="form-group my-2">
-                  <label for="birthDate">Birth Date</label>
-                  <input class="form-control" th:value="${patient.getBirthDate()}" type="date" name="birthDate" id="birthDate" placeholder="enter the Birth Date">
-                </div>
-                <div class="text-capitalize my-2">
-                  <label for="gender">Gender</label>
-                  <select class="form-select" name="gender" id="gender" th:selected="${patient.getGender()}">
-                    <option value="MALE">MALE</option>
-                    <option value="FEMALE">FEMALE</option>
-                  </select>
-                </div>
-                <div class="d-flex align-items-center justify-content-end mt-3">
-                  <button class="btn c-outline-primary px-4 me-2" type="reset">
-                    <i class="fa-solid fa-floppy-disk" ></i> Cancel
+
+                <!-- Actions -->
+                <div class="form-actions">
+                  <button class="btn cancel-btn" type="reset">
+                    <i class="fa-solid fa-rotate-left me-2"></i>
+                    Reset
                   </button>
-                  <button class="btn c-btn-primary text-white px-4" type="submit">
-                    <i class="fa-solid fa-floppy-disk"></i> Save
+
+                  <button class="btn save-btn" type="submit">
+                    <i class="fa-solid fa-check me-2"></i>
+                    Save Changes
                   </button>
                 </div>
               </form>
             </div>
+          </div>
+        </div>
       </div>
-  <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
-</body>
+    </div>
+    <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

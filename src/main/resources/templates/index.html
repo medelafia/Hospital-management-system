@@ -1,195 +1,557 @@
 <!doctype html>
-<html lang="en"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}"
-      xmlns:th="http://www.thymeleaf.org"
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout}"
+  xmlns:th="http://www.thymeleaf.org"
 >
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Home</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
     <link th:href="@{/main.css}" rel="stylesheet" />
-</head>
-<body class="bg-white">
+    <style>
+      .stat-card {
+        border-radius: 16px;
+        padding: 20px 25px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        transition: all 0.3s ease;
+        cursor: default;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      }
+
+      .stat-card .stat-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        flex-shrink: 0;
+      }
+
+      .stat-card .stat-info {
+        flex: 1;
+      }
+
+      .stat-card .stat-number {
+        font-size: 1.8rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .stat-card .stat-label {
+        font-size: 0.85rem;
+        opacity: 0.85;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .stat-card .stat-trend {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 0.75rem;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 3px 10px;
+        border-radius: 20px;
+        backdrop-filter: blur(5px);
+      }
+
+      .stat-card-blue {
+        background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+        color: white;
+      }
+
+      .stat-card-green {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        color: white;
+      }
+
+      .stat-card-orange {
+        background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        color: white;
+      }
+
+      .stat-card-red {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+      }
+
+      /* Glass badges */
+      .badge-glass {
+        padding: 5px 14px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        backdrop-filter: blur(5px);
+      }
+
+      .badge-glass-red {
+        background: rgba(231, 76, 60, 0.15);
+        color: #e74c3c;
+        border: 1px solid rgba(231, 76, 60, 0.2);
+      }
+
+      .badge-glass-yellow {
+        background: rgba(243, 156, 18, 0.15);
+        color: #f39c12;
+        border: 1px solid rgba(243, 156, 18, 0.2);
+      }
+
+      .badge-glass-green {
+        background: rgba(46, 204, 113, 0.15);
+        color: #2ecc71;
+        border: 1px solid rgba(46, 204, 113, 0.2);
+      }
+
+      .badge-glass-blue {
+        background: rgba(52, 152, 219, 0.15);
+        color: #3498db;
+        border: 1px solid rgba(52, 152, 219, 0.2);
+      }
+
+      .section-title {
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 1.1rem;
+        margin: 0;
+      }
+
+      .see-all-link {
+        color: #667eea;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+      }
+
+      .see-all-link:hover {
+        color: #764ba2;
+        text-decoration: underline;
+      }
+
+      .appointment-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: all 0.3s ease;
+      }
+
+      .appointment-item:last-child {
+        border-bottom: none;
+      }
+
+      .appointment-item:hover {
+        background: #f8f9fa;
+        margin: 0 -12px;
+        padding: 12px;
+        border-radius: 8px;
+      }
+
+      .appointment-item .patient-name {
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 0.95rem;
+        margin: 0;
+      }
+
+      .appointment-item .appointment-time {
+        color: #6b7280;
+        font-size: 0.8rem;
+        margin: 0;
+      }
+
+      .appointment-item .appointment-time i {
+        margin-right: 5px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 30px 0;
+        color: #9ca3af;
+      }
+
+      .empty-state i {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+        opacity: 0.5;
+      }
+
+      .chart-container {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        min-height: 300px;
+      }
+
+      .chart-container canvas {
+        max-height: 250px;
+      }
+
+      .gender-chart-container {
+        background: white;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        height: 100%;
+        min-height: 250px;
+      }
+
+      .gender-chart-container canvas {
+        max-height: 150px;
+      }
+
+      .pagination-btns .btn {
+        border-radius: 8px;
+        padding: 5px 12px;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+      }
+
+      .pagination-btns .btn:hover {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+      }
+
+      @media (max-width: 768px) {
+        .stat-card {
+          padding: 15px 20px;
+        }
+        .stat-card .stat-number {
+          font-size: 1.3rem;
+        }
+        .stat-card .stat-icon {
+          width: 45px;
+          height: 45px;
+          font-size: 1.2rem;
+        }
+        .chart-container {
+          min-height: 200px;
+          margin-bottom: 15px;
+        }
+        .gender-chart-container {
+          min-height: 200px;
+          margin-bottom: 15px;
+        }
+      }
+
+      /* Custom select */
+      .custom-select {
+        border: 2px solid #e8ecf1;
+        border-radius: 10px;
+        padding: 8px 15px;
+        font-size: 0.85rem;
+        color: #1f2937;
+        background: white;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        outline: none;
+        width: 120px;
+      }
+
+      .custom-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+      }
+
+      .welcome-text {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 25px;
+      }
+
+      .welcome-text span {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+  <body class="bg-white">
     <div layout:fragment="content">
-        <h1 class="f-bold mb-3" style="font-size: 1.5rem">Welcome back!</h1>
-        <div class="row text-white">
-            <div class="col-sm-3">
-                <div class="container p-3 rounded-3 d-flex align-items-center" style="background-color:#4A90D9">
-                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px">
-                        <i class="fa-solid fa-bed"></i>
-                    </span>
-                    <div class="ms-2">
-                        <span class="font-bold" style="font-size: 1.2rem" th:text="${patientsCount}"></span>
-                        <br />
-                        Patients
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="container p-3 rounded-3 d-flex align-items-center" style="background-color:#2ECC71">
-                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px">
-                        <i class="fa-solid fa-user"></i>
-                    </span>
-                    <div class="ms-2">
-                        <span class="font-bold" style="font-size: 1.2rem" th:text="${usersCount}"></span>
-                        <br />
-                        Users
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="container p-3 rounded-3 d-flex align-items-center"  style="background-color:#F39C12">
-                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px">
-                        <i class="fa-solid fa-business-time"></i>
-                    </span>
-                    <div class="ms-2">
-                        <span class="font-bold" style="font-size: 1.2rem" th:text="${appointmentsCount}"></span>
-                        <br />
-                        Appointments
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="container p-3 rounded-3 d-flex align-items-center" style="background-color:#E74C3C">
-                    <span class="glass rounded-circle d-flex align-items-center justify-content-center" style="width: 45px; height: 45px"><i class="fa-solid fa-user-doctor"></i></span>
-                    <div class="ms-2">
-                        <span class="font-bold" style="font-size: 1.2rem" th:text="${doctorsCount}"></span>
-                        <br />
-                        Doctors
-                    </div>
+      <!-- Welcome -->
+      <h1 class="welcome-text">Welcome back, <span>Admin</span> 👋</h1>
 
-                </div>
+      <!-- Statistics Cards -->
+      <div class="row g-4 text-white">
+        <div class="col-xl-3 col-lg-6 col-md-6">
+          <div class="stat-card stat-card-blue">
+            <div class="stat-icon">
+              <i class="fa-solid fa-bed"></i>
             </div>
+            <div class="stat-info">
+              <div class="stat-number" th:text="${patientsCount}">0</div>
+              <div class="stat-label">Patients</div>
+            </div>
+            <div class="stat-trend">
+              <i class="fa-solid fa-arrow-up"></i> 12%
+            </div>
+          </div>
         </div>
 
-
-        <div class="row mt-4">
-            <div class="col-sm-6">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h5 class="w-content">Monthly Sales Performance Overview</h5>
-                    <select  name="status" class="form-select" style="width: 20%">
-                        <option value="NONE">--Year--</option>
-                        <option value="RESERVED">2022</option>
-                        <option value="CANCELED">2023</option>
-                        <option value="COMPLETED">2024</option>
-                        <option value="APPROVED">2025</option>
-                        <option value="APPROVED">2026</option>
-
-                    </select>
-                </div>
-
-                <!-- The graph canvas targeting container -->
-                <div class="bg-white p-4 rounded-3 mt-3" style="position: relative; height: 300px; width: 100%;">
-                    <canvas id="appointmentsChart" > </canvas>
-                </div>
+        <div class="col-xl-3 col-lg-6 col-md-6">
+          <div class="stat-card stat-card-green">
+            <div class="stat-icon">
+              <i class="fa-solid fa-users"></i>
             </div>
-            <div class="col-sm-2">
-                <h5>Gender</h5>
-                <!-- The graph canvas targeting container -->
-                <div class="bg-white p-4 rounded-3 mt-3" style="position: relative; height: 200px; width: 100%;">
-                    <canvas id="genderChart" > </canvas>
-                </div>
+            <div class="stat-info">
+              <div class="stat-number" th:text="${usersCount}">0</div>
+              <div class="stat-label">Users</div>
             </div>
-            <div class="col-md-4">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h5>Today's appointments</h5>
-                    <a href="/appointments" class="text-decoration-none">see all</a>
-                </div>
-
-                <div class="bg-white rounded-3 p-3 mt-3">
-                    <div th:if="${appointments.isEmpty()}">no appointments today</div>
-                    <div class="d-flex justify-content-between align-items-start" th:if="${!appointments.isEmpty()}" th:each="appointment : ${appointments}">
-                        <div>
-                            <h6 th:text='${appointment.getPatient().getFirstName() + " " +appointment.getPatient().getLastName()}'></h6>
-                            <p  class="text-secondary">
-                                <i class="fa-regular fa-clock me-2"></i>
-                                <span th:text='${appointment.getStartTime().toString()}'></span>
-                            </p>
-                        </div>
-                        <div th:text="${appointment.getStatus()}" class="badge glass-red" th:if='${appointment.getStatus().name().equalsIgnoreCase("CANCELED")}'></div>
-                        <div th:text="${appointment.getStatus()}" class="badge glass-yellow" th:if='${appointment.getStatus().name().equalsIgnoreCase("RESERVED")}'></div>
-                        <div th:text="${appointment.getStatus()}" class="badge glass-green" th:if='${appointment.getStatus().name().equalsIgnoreCase("COMPLETED")}'></div>
-                        <div th:text="${appointment.getStatus()}" class="badge glass-blue" th:if='${appointment.getStatus().name().equalsIgnoreCase( "APPROVED" ) }'></div>
-                    </div>
-
-                    <div th:if="${!appointments.isEmpty()}" class="d-flex justify-content-end">
-                        <a href="/index" class="btn btn-outline-success me-1"><i class="fa-solid fa-angle-left"></i></a>
-                        <a href="/index" class="btn btn-outline-success ms-1"><i class="fa-solid fa-angle-right"></i></a>
-                    </div>
-                </div>
+            <div class="stat-trend">
+              <i class="fa-solid fa-arrow-up"></i> 8%
             </div>
-
+          </div>
         </div>
-        <script th:inline="javascript">
-            document.addEventListener("DOMContentLoaded", () => {
-                /* Thymeleaf loads Java collections as native JSON variables safely */
 
+        <div class="col-xl-3 col-lg-6 col-md-6">
+          <div class="stat-card stat-card-orange">
+            <div class="stat-icon">
+              <i class="fa-solid fa-business-time"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number" th:text="${appointmentsCount}">0</div>
+              <div class="stat-label">Appointments</div>
+            </div>
+            <div class="stat-trend">
+              <i class="fa-solid fa-arrow-up"></i> 23%
+            </div>
+          </div>
+        </div>
 
-                const labelsData = [[${labels}]] ;
-                const numericData = [[${values}]];
-                console.log(labelsData)
+        <div class="col-xl-3 col-lg-6 col-md-6">
+          <div class="stat-card stat-card-red">
+            <div class="stat-icon">
+              <i class="fa-solid fa-user-doctor"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-number" th:text="${doctorsCount}">0</div>
+              <div class="stat-label">Doctors</div>
+            </div>
+            <div class="stat-trend">
+              <i class="fa-solid fa-arrow-up"></i> 5%
+            </div>
+          </div>
+        </div>
+      </div>
 
-                // Initialize and bind the Chart.js configuration
-                const ctx = document.getElementById('appointmentsChart').getContext('2d');
-                const appointmentsChart = new Chart(ctx, {
-                    type: 'bar', // Type options include: 'line', 'pie', 'doughnut', 'radar'
-                    data: {
-                        labels: labelsData, // Populated from Java list
-                        datasets: [{
-                            label: 'Number of appointments',
-                            data: numericData, // Populated from Java list
-                            backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true
-                            }
-                        }
+      <!-- Charts Row -->
+      <div class="row mt-4">
+        <!-- Monthly Sales Chart -->
+        <div class="col-xl-6 col-lg-12">
+          <div class="chart-container">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h5 class="section-title">Monthly Appointments Overview</h5>
+              <select name="status" class="custom-select">
+                <option value="NONE">--Year--</option>
+                <option value="RESERVED">2022</option>
+                <option value="CANCELED">2023</option>
+                <option value="COMPLETED">2024</option>
+                <option value="APPROVED">2025</option>
+                <option value="APPROVED">2026</option>
+              </select>
+            </div>
+            <div style="position: relative; height: 280px; width: 100%">
+              <canvas id="appointmentsChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gender Chart & Today's Appointments -->
+        <div class="col-xl-6 col-lg-12">
+          <div class="row g-4">
+            <!-- Gender Chart -->
+            <div class="col-md-6">
+              <div class="gender-chart-container">
+                <h5 class="section-title mb-3">Gender Distribution</h5>
+                <div style="position: relative; height: 200px; width: 100%">
+                  <canvas id="genderChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Today's Appointments -->
+            <div class="col-md-6">
+              <div class="chart-container" style="min-height: 250px">
+                <div
+                  class="d-flex align-items-center justify-content-between mb-3"
+                >
+                  <h5 class="section-title">Today's Appointments</h5>
+                  <a href="/appointment/" class="see-all-link">See all →</a>
+                </div>
+
+                <div th:if="${appointments.isEmpty()}" class="empty-state">
+                  <i class="fa-regular fa-calendar-circle-check"></i>
+                  <p class="mb-0">No appointments today</p>
+                </div>
+
+                <div th:if="${!appointments.isEmpty()}">
+                  <div
+                    class="appointment-item"
+                    th:each="appointment : ${appointments}"
+                  >
+                    <div
+                      class="d-flex justify-content-between align-items-center"
+                    >
+                      <div>
+                        <h6
+                          class="patient-name"
+                          th:text="${appointment.getPatient().getFirstName() + ' ' + appointment.getPatient().getLastName()}"
+                        ></h6>
+                        <p class="appointment-time">
+                          <i class="fa-regular fa-clock"></i>
+                          <span
+                            th:text="${appointment.getStartTime().toString()}"
+                          ></span>
+                        </p>
+                      </div>
+                      <div>
+                        <span
+                          class="badge-glass badge-glass-red"
+                          th:if='${appointment.getStatus().name().equalsIgnoreCase("CANCELED")}'
+                          th:text="${appointment.getStatus()}"
+                        ></span>
+                        <span
+                          class="badge-glass badge-glass-yellow"
+                          th:if='${appointment.getStatus().name().equalsIgnoreCase("RESERVED")}'
+                          th:text="${appointment.getStatus()}"
+                        ></span>
+                        <span
+                          class="badge-glass badge-glass-green"
+                          th:if='${appointment.getStatus().name().equalsIgnoreCase("COMPLETED")}'
+                          th:text="${appointment.getStatus()}"
+                        ></span>
+                        <span
+                          class="badge-glass badge-glass-blue"
+                          th:if='${appointment.getStatus().name().equalsIgnoreCase("APPROVED")}'
+                          th:text="${appointment.getStatus()}"
+                        ></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Pagination -->
+                  <div
+                    class="d-flex justify-content-end mt-3 pagination-btns"
+                    th:if="${!appointments.isEmpty()}"
+                  >
+                    <a href="/index" class="btn btn-outline-secondary me-1">
+                      <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                    <a href="/index" class="btn btn-outline-secondary ms-1">
+                      <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- JavaScript -->
+      <script th:inline="javascript">
+        document.addEventListener("DOMContentLoaded", () => {
+          // Appointments Chart
+          const labelsData = [[${labels}]];
+          const numericData = [[${values}]];
+
+          const ctx = document.getElementById('appointmentsChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: labelsData,
+              datasets: [{
+                label: 'Number of appointments',
+                data: numericData,
+                backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                borderColor: 'rgba(102, 126, 234, 1)',
+                borderWidth: 2,
+                borderRadius: 6,
+                barPercentage: 0.6
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: 'rgba(0, 0, 0, 0.05)'
+                  }
+                },
+                x: {
+                  grid: {
+                    display: false
+                  }
+                }
+              }
+            }
+          });
+
+          // Gender Chart
+          const ctxChartGender = document.getElementById('genderChart').getContext('2d');
+          new Chart(ctxChartGender, {
+            type: 'doughnut',
+            data: {
+              labels: ['Male', 'Female'],
+              datasets: [{
+                label: 'Patients gender percentage',
+                data: [300, 50],
+                backgroundColor: ['#4a90d9', '#f39c12'],
+                borderWidth: 3,
+                borderColor: '#ffffff',
+                hoverOffset: 8
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: 'bottom',
+                  labels: {
+                    padding: 15,
+                    usePointStyle: true,
+                    pointStyle: 'circle',
+                    font: {
+                      size: 11
                     }
-                });
-                const ctxChartGender = document.getElementById('genderChart').getContext('2d');
-                const genderChart = new Chart(ctxChartGender, {
-                    type: 'doughnut', // Type options include: 'line', 'pie', 'doughnut', 'radar'
-                        data: {
-                            labels: [
-                                'Men',
-                                'Women'
-                            ],
-                            datasets: [{
-                                label: 'Patients gender percentage',
-                                data: [300, 50 ],
-                                backgroundColor: [
-                                    '#E74C3C',
-                                    '#F39C12'
-                                ],
-                                hoverOffset: 4
-                            }]
-                        },
-                        options : {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'bottom'
-                                }
-                            }
-                        }
-                });
-
-            })
-        </script>
+                  }
+                }
+              },
+              cutout: '70%'
+            }
+          });
+        });
+      </script>
     </div>
-
-    <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
-
-</body>
+  </body>
 </html>

@@ -1,188 +1,718 @@
 <!doctype html>
-<html lang="en"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
+<html
+  lang="en"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="https://www.thymeleaf.org/extras/spring-security"
 >
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title layout:title-pattern="$CONTENT_TITLE - $CONTENT_TITLE">HMS</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="/webjars/bootstrap/5.3.1/css/bootstrap.min.css"
+    />
     <script src="/webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link th:href="@{/main.css}" rel="stylesheet" />
     <style>
-        body {
-            width: 100% ;
-            height: 100vh;
+      /* Reset and Base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        min-height: 100vh;
+        background: #f0f2f5;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      /* Sidebar Styles */
+      .sidebar {
+        width: 250px;
+        min-height: 100vh;
+        background: white;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+      }
+
+      .sidebar-brand {
+        padding: 25px 20px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .sidebar-brand h3 {
+        font-weight: 700;
+        font-size: 1.5rem;
+        margin: 0;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .sidebar-brand i {
+        font-size: 1.8rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      .sidebar-nav {
+        padding: 15px 10px;
+        list-style: none;
+      }
+
+      .sidebar-nav li {
+        margin-bottom: 4px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-nav li:hover:not(.active) {
+        background: #f8f9fa;
+      }
+
+      .sidebar-nav li.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      }
+
+      .sidebar-nav li.active a {
+        color: white !important;
+      }
+
+      .sidebar-nav li.active i {
+        color: white !important;
+      }
+
+      .sidebar-nav li a {
+        display: flex;
+        align-items: center;
+        padding: 12px 15px;
+        color: #6b7280;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        border-radius: 10px;
+        gap: 12px;
+      }
+
+      .sidebar-nav li a i {
+        width: 20px;
+        font-size: 1.1rem;
+        color: #9ca3af;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-nav li.active a i {
+        color: white !important;
+      }
+
+      .sidebar-nav li:hover:not(.active) a i {
+        color: #667eea;
+      }
+
+      .sidebar-arrow {
+        margin-left: auto;
+        font-size: 0.8rem;
+        opacity: 0.7;
+      }
+
+      /* Main Content */
+      .main-content {
+        flex: 1;
+        min-height: 100vh;
+        background: #f0f2f5;
+      }
+
+      /* Top Navbar */
+      .top-navbar {
+        background: white;
+        padding: 12px 30px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .top-navbar-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .top-navbar-left .menu-toggle {
+        background: none;
+        border: none;
+        font-size: 1.3rem;
+        color: #667eea;
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .top-navbar-left .menu-toggle:hover {
+        background: #f0f2f5;
+      }
+
+      .top-navbar-left .page-title {
+        font-weight: 600;
+        color: #1f2937;
+        font-size: 1.1rem;
+        margin: 0;
+      }
+
+      .top-navbar-right {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .top-navbar-right .user-dropdown {
+        background: none;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 15px;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        color: #1f2937;
+      }
+
+      .top-navbar-right .user-dropdown:hover {
+        background: #f0f2f5;
+      }
+
+      .top-navbar-right .user-dropdown .avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+      }
+
+      .top-navbar-right .user-dropdown .user-name {
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+
+      .dropdown-menu-custom {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        padding: 8px;
+        min-width: 200px;
+      }
+
+      .dropdown-menu-custom .dropdown-item {
+        border-radius: 8px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+
+      .dropdown-menu-custom .dropdown-item:hover {
+        background: #f0f2f5;
+      }
+
+      .dropdown-menu-custom .dropdown-item i {
+        width: 20px;
+        color: #6b7280;
+      }
+
+      .dropdown-menu-custom .dropdown-item.text-danger i {
+        color: #ef4444;
+      }
+
+      .dropdown-divider-custom {
+        margin: 5px 0;
+        border-color: #f0f0f0;
+      }
+
+      /* Content Area */
+      .content-area {
+        padding: 25px 30px;
+        min-height: calc(100vh - 70px);
+      }
+
+      /* Alert Styles */
+      .alert-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 500px;
+        width: 100%;
+      }
+
+      .alert-custom {
+        border: none;
+        border-radius: 12px;
+        padding: 15px 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+        animation: slideDown 0.5s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .alert-custom .alert-icon {
+        font-size: 1.3rem;
+      }
+
+      .alert-custom .alert-content {
+        flex: 1;
+      }
+
+      .alert-custom .alert-content strong {
+        display: block;
+        font-size: 0.9rem;
+      }
+
+      .alert-custom .alert-content span {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+
+      .alert-custom .btn-close {
+        padding: 0.5rem;
+        font-size: 0.8rem;
+      }
+
+      @keyframes slideDown {
+        from {
+          transform: translateY(-100px);
+          opacity: 0;
         }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          left: -280px;
+          top: 0;
+          z-index: 999;
+          transition: left 0.3s ease;
+          box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar.open {
+          left: 0;
+        }
+
+        .sidebar-overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.3);
+          z-index: 998;
+        }
+
+        .sidebar-overlay.active {
+          display: block;
+        }
+
+        .top-navbar {
+          padding: 10px 15px;
+        }
+
+        .content-area {
+          padding: 15px;
+        }
+
+        .alert-container {
+          top: 10px;
+          right: 10px;
+          max-width: calc(100% - 20px);
+        }
+
+        .top-navbar-left .page-title {
+          font-size: 0.95rem;
+        }
+
+        .top-navbar-right .user-dropdown .user-name {
+          display: none;
+        }
+      }
+
+      /* Scrollbar Styling */
+      .sidebar::-webkit-scrollbar {
+        width: 4px;
+      }
+
+      .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 10px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af;
+      }
+
+      /* Notification Badge */
+      .notification-badge {
+        position: relative;
+      }
+
+      .notification-badge .badge-dot {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        width: 8px;
+        height: 8px;
+        background: #ef4444;
+        border-radius: 50%;
+        border: 2px solid white;
+      }
     </style>
+  </head>
+  <body>
+    <!-- Sidebar Overlay (Mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-</head>
-<body>
-    <div class="d-flex h-100">
-        <div class="py-5 px-3 border-end h-100" style="width: 20%">
-            <h3 class="navbar-brand text-capitalize fs-3 c-text-primary">HMS</h3>
-            <ul class="navbar-nav nav text-capitalize mt-3">
-                <li
-                        th:class='${
-                            currentUri.equals("/") || currentUri.equals("/index")
-                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            :"nav-item px-2"
-                        }'
-                >
-                    <a href="/index" class="nav-link">
-                        <i class="fa-solid fa-house me-2"></i>
-                        home
-                    </a>
-                    <i th:if='${currentUri.equals("/") || currentUri.equals("/index") }' class="fa-solid fa-angle-right"></i>
-                </li>
-                <li
-                        sec:authorize="hasAuthority('ROLE_ADMIN')"
-                        th:class='${
-                            currentUri.equals("/patient/")
-                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            :"nav-item px-2"
-                        }'
-                >
-                    <a href="/patient/" class="nav-link">
-                        <i class="fa-solid fa-bed me-2"></i>
-                        patients
-                    </a>
-                    <i th:if='${currentUri.equals("/patient/")}' class="fa-solid fa-angle-right "></i>
-                </li>
-                <li
-                        th:class='${
-                            currentUri.equals("/doctor/")
-                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            :"nav-item px-2"
-                        }'
-                >
-                    <a href="/doctor/" class="nav-link">
-                        <i class="fa-solid fa-user-doctor me-2"></i>
-                        doctors
-                    </a>
-                    <i th:if='${currentUri.equals("/doctor/")}' class="fa-solid fa-angle-right"></i>
-                </li>
-                <li
-                        sec:authorize="hasAuthority('ROLE_ADMIN')"
-                        th:class='${
-                            currentUri.equals("/appointment/")
-                            ? "nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            : "nav-item px-2"
-                        }'
-                >
-                    <a href="/appointment/" class="nav-link">
-                        <i class="fa-solid fa-business-time me-2"></i>
-                        appointment
-                    </a>
-                    <i th:if='${currentUri.equals("/appointment/")}' class="fa-solid fa-angle-right"></i>
-                </li>
-                <li
-                        sec:authorize="hasAuthority('ROLE_ADMIN')"
-                        th:class='${
-                            currentUri.equals("/user/")
-                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            :"nav-item px-2"
-                        }'
-                >
-                    <a href="/user/" class="nav-link">
-                        <i class="fa-solid fa-user me-2"></i>
-                        users
-                    </a>
-                    <i th:if='${currentUri.equals("/user/")}' class="fa-solid fa-angle-right"></i>
-                </li>
-                <li
-                        sec:authorize="hasAuthority('ROLE_PATIENT')"
-                        th:class='${
-                            currentUri.equals("/patient/my-appointments")
-                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            :"nav-item px-2"
-                        }'
-                >
-                    <a href="/patient/my-appointments" class="nav-link">
-                        <i class="fa-solid fa-business-time me-2"></i>
-                        My Appointment
-                    </a>
-                    <i th:if='${currentUri.equals("/patient/my-appointments")}' class="fa-solid fa-angle-right"></i>
-                </li>
-                <li
-                        sec:authorize="hasAuthority('ROLE_PATIENT')"
-                        th:class='${
-                            currentUri.equals("/patient/my-profile")
-                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            :"nav-item px-2"
-                        }'
-                >
-                    <a href="/patient/my-profile" class="nav-link">
-                        <i class="fa-solid fa-address-book me-2"></i>
-                        Profile
-                    </a>
-                    <i th:if='${currentUri.equals("/patient/my-profile")}' class="fa-solid fa-angle-right"></i>
-                </li>
-                <li
-                        sec:authorize="hasAuthority('ROLE_DOCTOR')"
-                        th:class='${
-                            currentUri.matches("/doctor/\\d+")
-                            ?"nav-item px-2 rounded text-white c-bg-primary d-flex justify-content-between align-items-center"
-                            :"nav-item px-2"
-                        }'
-                >
-                    <a href="/doctor/my-profile" class="nav-link">
-                        <i class="fa-solid fa-address-book me-2"></i>
-                        Profile
-                    </a>
-                    <i th:if='${currentUri.matches("/doctor/\\d+")}' class="fa-solid fa-angle-right"></i>
-                </li>
-            </ul>
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <div class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <h3>HMS</h3>
         </div>
-        <div class="w-100">
-            <div class="navbar navbar-expand-sm navbar-dark border-bottom">
-                <div class="container d-flex align-items-center">
-                    <button class="btn ">
-                        <i class="fa-solid fa-bars c-text-primary"></i>
+
+        <ul class="sidebar-nav">
+          <li
+            th:class='${
+              currentUri.equals("/") || currentUri.equals("/index")
+              ? "active"
+              : ""
+            }'
+          >
+            <a href="/index">
+              <i class="fa-solid fa-house"></i>
+              <span>Home</span>
+              <i
+                th:if='${currentUri.equals("/") || currentUri.equals("/index") }'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+
+          <li
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            th:class='${
+              currentUri.equals("/patient/") ? "active" : ""
+            }'
+          >
+            <a href="/patient/">
+              <i class="fa-solid fa-bed"></i>
+              <span>Patients</span>
+              <i
+                th:if='${currentUri.equals("/patient/")}'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+
+          <li
+            th:class='${
+              currentUri.equals("/doctor/") ? "active" : ""
+            }'
+          >
+            <a href="/doctor/">
+              <i class="fa-solid fa-user-doctor"></i>
+              <span>Doctors</span>
+              <i
+                th:if='${currentUri.equals("/doctor/")}'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+
+          <li
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            th:class='${
+              currentUri.equals("/appointment/") ? "active" : ""
+            }'
+          >
+            <a href="/appointment/">
+              <i class="fa-solid fa-business-time"></i>
+              <span>Appointments</span>
+              <i
+                th:if='${currentUri.equals("/appointment/")}'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+
+          <li
+            sec:authorize="hasAuthority('ROLE_ADMIN')"
+            th:class='${
+              currentUri.equals("/user/") ? "active" : ""
+            }'
+          >
+            <a href="/user/">
+              <i class="fa-solid fa-users"></i>
+              <span>Users</span>
+              <i
+                th:if='${currentUri.equals("/user/")}'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+
+          <li
+            sec:authorize="hasAuthority('ROLE_PATIENT')"
+            th:class='${
+              currentUri.equals("/patient/my-appointments") ? "active" : ""
+            }'
+          >
+            <a href="/patient/my-appointments">
+              <i class="fa-solid fa-calendar-check"></i>
+              <span>My Appointments</span>
+              <i
+                th:if='${currentUri.equals("/patient/my-appointments")}'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+
+          <li
+            sec:authorize="hasAuthority('ROLE_PATIENT')"
+            th:class='${
+              currentUri.equals("/patient/my-profile") ? "active" : ""
+            }'
+          >
+            <a href="/patient/my-profile">
+              <i class="fa-solid fa-id-card"></i>
+              <span>My Profile</span>
+              <i
+                th:if='${currentUri.equals("/patient/my-profile")}'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+
+          <li
+            sec:authorize="hasAuthority('ROLE_DOCTOR')"
+            th:class='${
+              currentUri.matches("/doctor/\\d+") ? "active" : ""
+            }'
+          >
+            <a href="/doctor/my-profile">
+              <i class="fa-solid fa-id-card"></i>
+              <span>My Profile</span>
+              <i
+                th:if='${currentUri.matches("/doctor/\\d+")}'
+                class="fa-solid fa-angle-right sidebar-arrow"
+              ></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Top Navbar -->
+        <nav class="top-navbar">
+          <div class="top-navbar-left">
+            <button class="menu-toggle" id="menuToggle">
+              <i class="fa-solid fa-bars"></i>
+            </button>
+            <h5 class="page-title" layout:fragment="page-title">Dashboard</h5>
+          </div>
+
+          <div class="top-navbar-right">
+            <div class="dropdown">
+              <button
+                class="user-dropdown"
+                type="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <div class="avatar">
+                  <th:block
+                    th:with="username=${#authentication != null ? #authentication.name : 'Guest'}"
+                  >
+                    <span
+                      th:text="${#strings.substring(username, 0, 1).toUpperCase()}"
+                      >U</span
+                    >
+                  </th:block>
+                </div>
+                <span class="user-name" sec:authentication="principal.username"
+                  >User</span
+                >
+                <i
+                  class="fa-solid fa-chevron-down"
+                  style="font-size: 0.7rem; color: #9ca3af"
+                ></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom">
+                <li>
+                  <a class="dropdown-item" href="/user/change-password">
+                    <i class="fa-solid fa-key me-2"></i> Change Password
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider dropdown-divider-custom" /></li>
+                <li>
+                  <form th:action="@{/logout}" method="post" class="m-0">
+                    <button
+                      class="dropdown-item text-danger w-100 text-start border-0 bg-transparent"
+                    >
+                      <i class="fa-solid fa-sign-out-alt me-2"></i> Logout
                     </button>
-                    <div class="dropdown me-1">
-                        <button class="btn dropdown-toggle c-text-primary" type="button" data-bs-toggle="dropdown">
-                            <i class="fa-solid fa-user c-text-primary"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end p-1">
-                            <li class="mt-2"><a class="dropdown-item" href="/user/change-password">
-                                <i class="fa-solid fa-key me-2"></i>change password</a>
-                            </li>
-                            <li>
-                                <form th:action="@{/logout}" method="post">
-                                    <button class="btn text-danger"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>logout</button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                  </form>
+                </li>
+              </ul>
             </div>
-            <div class="w-100 position-relative">
-                <div class="container d-flex justify-content-end">
-                    <div th:if="${ successMessage }" class="alert alert-success alert-dismissible fade show w-50 d-flex position-absolute top-10 right-10" role="alert">
-                        <strong>Success!</strong> <div th:text='${" " + successMessage}'></div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div th:if="${ errorMessage }" class="alert alert-danger alert-dismissible fade show w-50" role="alert">
-                        <strong>Error! </strong> <div th:text='${ " " + errorMessage }'></div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    <div th:if="${ warningMessage }" class="alert alert-warning alert-dismissible fade show w-50" role="alert">
-                        <strong>Warning! </strong> <div th:text='${" " +warningMessage}'></div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                </div>
-            </div>
-            <div class="px-5 py-4 h-100 c-bg-secondary" >
-                <div layout:fragment="content">
+          </div>
+        </nav>
 
-                </div>
+        <!-- Alerts Container -->
+        <div class="alert-container">
+          <div
+            th:if="${ successMessage }"
+            class="alert alert-success alert-dismissible fade show alert-custom"
+            role="alert"
+          >
+            <i class="fa-solid fa-check-circle alert-icon text-success"></i>
+            <div class="alert-content">
+              <strong>Success!</strong>
+              <span th:text="${successMessage}"></span>
             </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div
+            th:if="${ errorMessage }"
+            class="alert alert-danger alert-dismissible fade show alert-custom"
+            role="alert"
+          >
+            <i
+              class="fa-solid fa-circle-exclamation alert-icon text-danger"
+            ></i>
+            <div class="alert-content">
+              <strong>Error!</strong>
+              <span th:text="${errorMessage}"></span>
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
+
+          <div
+            th:if="${ warningMessage }"
+            class="alert alert-warning alert-dismissible fade show alert-custom"
+            role="alert"
+          >
+            <i
+              class="fa-solid fa-triangle-exclamation alert-icon text-warning"
+            ></i>
+            <div class="alert-content">
+              <strong>Warning!</strong>
+              <span th:text="${warningMessage}"></span>
+            </div>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="alert"
+              aria-label="Close"
+            ></button>
+          </div>
         </div>
+
+        <!-- Content -->
+        <div class="content-area c-bg-secondary">
+          <div layout:fragment="content"></div>
+        </div>
+      </div>
     </div>
+
     <script src="/webjars/chart.js/4.4.0/dist/chart.umd.js"></script>
-</body>
+    <script>
+      // Mobile sidebar toggle
+      document.addEventListener("DOMContentLoaded", function () {
+        const menuToggle = document.getElementById("menuToggle");
+        const sidebar = document.getElementById("sidebar");
+        const overlay = document.getElementById("sidebarOverlay");
+
+        if (menuToggle) {
+          menuToggle.addEventListener("click", function () {
+            sidebar.classList.toggle("open");
+            overlay.classList.toggle("active");
+            document.body.style.overflow = sidebar.classList.contains("open")
+              ? "hidden"
+              : "";
+          });
+        }
+
+        if (overlay) {
+          overlay.addEventListener("click", function () {
+            sidebar.classList.remove("open");
+            overlay.classList.remove("active");
+            document.body.style.overflow = "";
+          });
+        }
+
+        // Auto-hide alerts after 5 seconds
+        const alerts = document.querySelectorAll(".alert-custom");
+        alerts.forEach((alert) => {
+          setTimeout(function () {
+            const closeButton = alert.querySelector(".btn-close");
+            if (closeButton) {
+              closeButton.click();
+            }
+          }, 5000);
+        });
+      });
+    </script>
+  </body>
 </html>

@@ -16,4 +16,7 @@ public class CustomExceptionHandler {
         model.addAttribute("message", e.getMessage());
         return "notFound" ;
     }
+
+
+
 }
