@@ -50,6 +50,7 @@ public class ThymeleafExampleApplication {
                 User user = User.builder()
                         .username(rootUsername)
                         .password(rootPassword)
+                        .email(rootUsername+"@test.com")
                         .roles(Set.of(role))
                         .build();
 
