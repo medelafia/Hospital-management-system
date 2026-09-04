@@ -4,13 +4,27 @@ services:
     container_name: mysql-container
     ports:
       - "3306:3306"
-    env_file: .env
+    environment:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=hospital
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   web-app:
-    image: .
+    build: .
     ports:
       - "8080:8080"
-    env_file: .env
+    environment:
+      - PORT
+      - MYSQL_HOST=mysql-service
+      - MYSQL_PORT=3306
+      - MYSQL_ROOT_PASSWORD
+      - APP_ROOT_USERNAME
+      - APP_ROOT_PASSWORD
     depends_on:
       mysql-service:
         condition: service_healthy
