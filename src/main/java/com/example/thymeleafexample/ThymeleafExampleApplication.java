@@ -1,6 +1,5 @@
 package com.example.thymeleafexample;
 
-import com.example.thymeleafexample.customExceptions.UsernameAlreadyTakenException;
 import com.example.thymeleafexample.entity.Role;
 import com.example.thymeleafexample.entity.User;
 import com.example.thymeleafexample.repository.RoleRepository;
@@ -30,27 +29,36 @@ public class ThymeleafExampleApplication {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder() ;
     }
-
     @Bean
-    public CommandLineRunner commandLineRunner(UserService userService, RoleRepository repository) {
+    public CommandLineRunner commandLineRunner(
+            UserService userService,
+            RoleRepository roleRepository
+    ) {
         return args -> {
-            System.out.println(this.rootUsername + " " + this.rootPassword);
-            try {
-                Role role =  Role.builder().roleName("ROLE_ADMIN").build();
-                if(!repository.findByRoleName(role.getRoleName()).isPresent()) {
-                    role = repository.save(role) ;
-                }
 
+            Role role = roleRepository
+                    .findByRoleName("ROLE_ADMIN")
+                    .orElseGet(() ->
+                            roleRepository.save(
+                                    Role.builder()
+                                            .roleName("ROLE_ADMIN")
+                                            .build()
+                            )
+                    );
+
+            if (!userService.existByUsername(rootUsername)) {
                 User user = User.builder()
                         .username(rootUsername)
+                        .password(rootPassword)
                         .roles(Set.of(role))
-                        .password(this.rootPassword)
                         .build();
-                userService.save(user);
-            }catch (UsernameAlreadyTakenException e){
-                System.out.println(e.getMessage());
-            }
-        } ;
-    }
 
+                userService.save(user);
+
+                System.out.println("Root user created.");
+            } else {
+                System.out.println("Root user already exists.");
+            }
+        };
+    }
 }

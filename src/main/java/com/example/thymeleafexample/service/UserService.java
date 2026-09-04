@@ -86,4 +86,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         this.userRepository.save(user);
     }
+    public boolean existByUsername(String username) {
+        return this.userRepository.findByUsername(username).isPresent();
+    }
 }
