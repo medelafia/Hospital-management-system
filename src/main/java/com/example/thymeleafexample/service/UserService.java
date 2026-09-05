@@ -7,6 +7,7 @@ import com.example.thymeleafexample.entity.Doctor;
 import com.example.thymeleafexample.entity.Patient;
 import com.example.thymeleafexample.entity.Role;
 import com.example.thymeleafexample.entity.User;
+import com.example.thymeleafexample.enums.Gender;
 import com.example.thymeleafexample.repository.DoctorRepo;
 import com.example.thymeleafexample.repository.PatientRepo;
 import com.example.thymeleafexample.repository.RoleRepository;
@@ -55,7 +56,15 @@ public class UserService {
         }
 
         if(role.getRoleName().equals("ROLE_PATIENT")) {
-            Patient patient = this.patientRepo.save(Patient.builder().cin("Not Set").firstName("Not Set").lastName("Not Set").build());
+            Patient patient = this.patientRepo.save(
+                    Patient.builder()
+                            .cin("Not Set")
+                            .firstName("Not Set")
+                            .lastName("Not Set")
+                            .cin("Not Set")
+                            .birthDate(Date.valueOf(LocalDate.now()))
+                            .gender(Gender.MALE)
+                            .build());
             user.setPatient(patient);
         }else if(role.getRoleName().equals("ROLE_DOCTOR")) {
             Doctor doctor = this.doctorRepo.save(
