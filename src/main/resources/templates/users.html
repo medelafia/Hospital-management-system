@@ -50,74 +50,152 @@
         ></a>
       </div>
       <div
-        class="modal fade"
-        id="addUserModal"
-        tabindex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
+              class="modal fade"
+              id="addUserModal"
+              tabindex="-1"
+              aria-labelledby="addUserModalLabel"
+              aria-hidden="true"
       >
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Add User</h1>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            <!-- Header with accent color -->
+            <div class="modal-header bg-primary bg-opacity-10 border-0 py-3 px-4">
+              <div class="d-flex align-items-center">
+                <div
+                        class="bg-primary bg-opacity-25 p-2 rounded-3 me-3 text-primary"
+                >
+                  <i class="fa-solid fa-user-plus fa-lg"></i>
+                </div>
+                <div>
+                  <h1 class="modal-title fs-4 fw-bold text-primary" id="addUserModalLabel">
+                    Add New User
+                  </h1>
+                  <small class="text-muted">Fill in the details below to create a user account</small>
+                </div>
+              </div>
               <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
+                      type="button"
+                      class="btn-close"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
               ></button>
             </div>
-            <div class="modal-body">
-              <form th:action="@{/user/}" method="post" class="p-4">
-                <div class="form-group my-2">
-                  <label for="username">Username</label>
-                  <input
-                    id="username"
-                    name="username"
-                    class="form-control"
-                    type="text"
-                    placeholder="enter the username"
-                  />
-                </div>
-                <div class="form-group my-2">
-                  <label for="email">Email</label>
-                  <input
-                    class="form-control"
-                    name="email"
-                    type="email"
-                    placeholder="enter the email of user"
-                    id="email"
-                  />
-                </div>
-                <div class="form-group my-2">
-                  <label for="role">Role</label>
-                  <select class="form-select" multiple name="roles" id="role">
-                    <option value="ROLE_DOCTOR">Doctor</option>
-                    <option value="ROLE_ADMIN">Admin</option>
-                    <option value="ROLE_PATIENT">Patient</option>
-                  </select>
-                </div>
 
-                <div class="form-group my-2">
-                  <label for="password">Password</label>
-                  <input
-                    class="form-control"
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="enter the Password of user"
-                  />
-                </div>
+            <!-- Modal Body -->
+            <div class="modal-body p-4">
+              <form th:action="@{/user/}" method="post" id="addUserForm" class="needs-validation">
+                <div class="row g-3">
+                  <!-- Username -->
+                  <div class="col-md-6">
+                    <label for="username" class="form-label fw-semibold small text-secondary">
+                      <i class="fa-regular fa-user me-1"></i> Username
+                    </label>
+                    <div class="input-group">
+                <span class="input-group-text bg-light border-end-0">
+                  <i class="fa-regular fa-user text-muted"></i>
+                </span>
+                      <input
+                              id="username"
+                              name="username"
+                              class="form-control border-start-0 ps-0"
+                              type="text"
+                              placeholder="e.g. johndoe"
+                              required
+                              autofocus
+                      />
+                    </div>
+                    <div class="invalid-feedback">Please enter a username.</div>
+                  </div>
 
-                <div class="d-flex align-items-center justify-content-end mt-3">
-                  <button class="btn btn-outline-danger px-2 me-2" type="reset">
-                    <i class="fa-solid fa-floppy-disk"></i> Cancel
-                  </button>
-                  <button class="btn btn-danger px-2" type="submit">
-                    <i class="fa-solid fa-floppy-disk"></i> Save
-                  </button>
+                  <!-- Email -->
+                  <div class="col-md-6">
+                    <label for="email" class="form-label fw-semibold small text-secondary">
+                      <i class="fa-regular fa-envelope me-1"></i> Email Address
+                    </label>
+                    <div class="input-group">
+                <span class="input-group-text bg-light border-end-0">
+                  <i class="fa-regular fa-envelope text-muted"></i>
+                </span>
+                      <input
+                              id="email"
+                              name="email"
+                              class="form-control border-start-0 ps-0"
+                              type="email"
+                              placeholder="e.g. name@example.com"
+                              required
+                      />
+                    </div>
+                    <div class="invalid-feedback">Please enter a valid email.</div>
+                  </div>
+
+                  <!-- Password -->
+                  <div class="col-md-6">
+                    <label for="password" class="form-label fw-semibold small text-secondary">
+                      <i class="fa-solid fa-key me-1"></i> Password
+                    </label>
+                    <div class="input-group">
+                <span class="input-group-text bg-light border-end-0">
+                  <i class="fa-solid fa-key text-muted"></i>
+                </span>
+                      <input
+                              id="password"
+                              name="password"
+                              class="form-control border-start-0 ps-0"
+                              type="password"
+                              placeholder="Minimum 8 characters"
+                              required
+                              minlength="8"
+                      />
+                    </div>
+                    <div class="invalid-feedback">Password must be at least 8 characters.</div>
+                  </div>
+
+                  <!-- Role -->
+                  <div class="col-md-6">
+                    <label for="role" class="form-label fw-semibold small text-secondary">
+                      <i class="fa-solid fa-user-tag me-1"></i> Role(s)
+                    </label>
+                    <div class="input-group">
+                <span class="input-group-text bg-light border-end-0">
+                  <i class="fa-solid fa-user-tag text-muted"></i>
+                </span>
+                      <select
+                              class="form-select border-start-0 ps-0"
+                              name="roles"
+                              id="role"
+                              multiple
+                              required
+                              style="min-height: 58px;"
+                      >
+                        <option value="ROLE_DOCTOR">👨‍⚕️ Doctor</option>
+                        <option value="ROLE_ADMIN">🛡️ Admin</option>
+                        <option value="ROLE_PATIENT">🩺 Patient</option>
+                      </select>
+                    </div>
+                    <small class="text-muted" style="font-size: 0.7rem;">
+                      <i class="fa-regular fa-circle-question"></i> Hold <kbd>Ctrl</kbd> (or <kbd>⌘</kbd> on Mac) to select multiple roles.
+                    </small>
+                  </div>
                 </div>
               </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer bg-light bg-opacity-50 border-0 px-4 py-3">
+              <button
+                      class="btn btn-outline-secondary rounded-pill px-4"
+                      type="button"
+                      data-bs-dismiss="modal"
+              >
+                <i class="fa-regular fa-circle-xmark me-1"></i> Cancel
+              </button>
+              <button
+                      class="btn btn-primary rounded-pill px-4 shadow-sm"
+                      type="submit"
+                      form="addUserForm"
+              >
+                <i class="fa-regular fa-floppy-disk me-1"></i> Create User
+              </button>
             </div>
           </div>
         </div>

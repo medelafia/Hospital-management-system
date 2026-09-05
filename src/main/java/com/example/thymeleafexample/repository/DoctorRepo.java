@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface DoctorRepo extends JpaRepository<Doctor , Integer > {
     public List<Doctor> findAllByFirstNameContainingIgnoreCase(String search) ;
+
+    List<Doctor> findAllByPublishedTrue();
 }

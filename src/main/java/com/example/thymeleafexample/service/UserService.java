@@ -17,6 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 @Service
 public class UserService {
     @Autowired
@@ -55,7 +58,17 @@ public class UserService {
             Patient patient = this.patientRepo.save(Patient.builder().cin("Not Set").firstName("Not Set").lastName("Not Set").build());
             user.setPatient(patient);
         }else if(role.getRoleName().equals("ROLE_DOCTOR")) {
-            Doctor doctor = this.doctorRepo.save(Doctor.builder().speciality("Not Set").firstName("Not Set").lastName("Not Set").build());
+            Doctor doctor = this.doctorRepo.save(
+                    Doctor.builder()
+                            .speciality("Not Set")
+                            .firstName("Not Set")
+                            .lastName("Not Set")
+                            .joinDate(Date.valueOf(LocalDate.now()))
+                            .birthDate(Date.valueOf(LocalDate.of(2000, 1, 1)))
+                            .email("notset@example.com")
+                            .phone("0000000000")
+                            .build()
+            );
             user.setDoctor(doctor);
         }
 

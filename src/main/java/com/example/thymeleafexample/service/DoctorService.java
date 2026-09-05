@@ -53,7 +53,7 @@ public class DoctorService {
         return this.doctorRepo.findById(id).orElseThrow() ;
     }
     public List<Doctor> getAllDoctors() {
-        return this.doctorRepo.findAll() ;
+        return this.doctorRepo.findAllByPublishedTrue() ;
     }
     public boolean checkAvailable(int doctorId , Date date, Time time) {
         return appointmentRepo.findByDateAndStartTimeAndDoctor(date , time , doctorRepo.findById(doctorId).orElseThrow(() -> new EntityNotFoundException("Doctor not found")) ).isPresent() ;
